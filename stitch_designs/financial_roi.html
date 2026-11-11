@@ -1,0 +1,737 @@
+<!DOCTYPE html><html class="light" lang="en"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400&amp;family=Nunito+Sans:ital,opsz,wght@0,6..12,300..800;1,6..12,400&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary": "#6b6358",
+            "surface": "#faf6f0",
+            "background": "#f5f1ea",
+            "on-tertiary": "#ffffff",
+            "on-background": "#2e3230",
+            "surface-container-high": "#eae6de",
+            "on-surface": "#2e3230",
+            "on-primary-fixed-variant": "#2a6038",
+            "outline": "#74796e",
+            "on-error-container": "#690005",
+            "inverse-on-surface": "#f5f0e8",
+            "surface-dim": "#dbd7cf",
+            "tertiary-fixed": "#f8e0a8",
+            "surface-bright": "#faf6f0",
+            "on-error": "#ffffff",
+            "outline-variant": "#c4c8bc",
+            "on-tertiary-fixed-variant": "#554020",
+            "secondary-container": "#f0e8db",
+            "on-tertiary-container": "#554020",
+            "primary-fixed-dim": "#8ecf9e",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#d4ccbf",
+            "error": "#b83230",
+            "primary": "#4a7c59",
+            "surface-container-low": "#f5f1ea",
+            "tertiary-container": "#c4a66a",
+            "surface-container": "#f0ece4",
+            "secondary-fixed": "#f0e8db",
+            "on-primary-container": "#173b22",
+            "on-secondary-fixed": "#1e1a13",
+            "tertiary-fixed-dim": "#dcc48e",
+            "primary-fixed": "#c8e8d0",
+            "error-container": "#fceae9",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#5e5548",
+            "on-surface-variant": "#5a5e5a",
+            "surface-tint": "#4a7c59",
+            "on-primary-fixed": "#002110",
+            "inverse-primary": "#8ecf9e",
+            "on-tertiary-fixed": "#221a05",
+            "surface-container-highest": "#e4e0d8",
+            "surface-variant": "#e4e0d8",
+            "on-secondary-fixed-variant": "#4a4538",
+            "tertiary": "#8a6627",
+            "inverse-surface": "#2e3230",
+            "primary-container": "#d7e8db"
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.25rem",
+            "2xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Literata", "serif"],
+            "display": ["Literata", "serif"],
+            "body": ["Nunito Sans", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #faf6f0; }
+    ::-webkit-scrollbar-thumb { background: #d4ccbf; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- TOP APP HEADER -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-surface-container-highest px-6 py-3 transition-all">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+<!-- Brand & Unit Selector -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline font-semibold text-lg text-on-surface tracking-tight">Sentry IQ</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-primary-container text-on-primary-container font-semibold tracking-wide">FLEET</span>
+</div>
+<p class="text-xs text-secondary leading-none">Aerospace Reliability Intelligence</p>
+</div>
+</div>
+<div class="h-5 w-px bg-surface-container-highest hidden sm:block"></div>
+<!-- Asset Selector -->
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl border border-surface-container-highest/80 hover:border-outline/40 transition-colors">
+<span class="material-symbols-outlined text-primary text-[18px]">save_as</span>
+<select class="bg-transparent font-medium text-xs text-on-surface focus:outline-none cursor-pointer pr-2">
+<option value="cfm56">CFM-56 · Unit #01 (Test Cell B-4)</option>
+<option value="hv230">HV Transformer 230kV (Substation A)</option>
+<option value="pump">Centrifugal Slurry Pump #04</option>
+</select>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="hidden md:flex items-center bg-surface-container p-1 rounded-xl border border-surface-container-highest text-xs font-semibold text-secondary">
+<a class="px-3.5 py-1.5 rounded-lg bg-surface text-on-surface shadow-sm font-semibold transition-all" href="#">Health Overview</a>
+<a class="px-3.5 py-1.5 rounded-lg hover:text-on-surface transition-all" href="#">Diagnostics &amp; RUL</a>
+<a class="px-3.5 py-1.5 rounded-lg hover:text-on-surface transition-all" href="#">Financial ROI</a>
+<a class="px-3.5 py-1.5 rounded-lg hover:text-on-surface transition-all" href="#">Maintenance Ops</a>
+</nav>
+<!-- Status & Quick Controls -->
+<div class="flex items-center gap-2.5">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-container border border-surface-container-highest text-xs text-secondary font-mono">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="hidden sm:inline">Telemetry Active</span>
+<span class="text-on-surface font-semibold">100Hz</span>
+</div>
+<button class="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-surface-container-highest text-xs font-medium text-on-surface transition-all">
+<span class="material-symbols-outlined text-[17px] text-tertiary">assignment</span>
+<span>Orders</span>
+<span class="w-4 h-4 rounded-full bg-tertiary text-on-tertiary text-[10px] flex items-center justify-center font-bold">3</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-surface-container-highest flex items-center justify-center text-on-surface-variant font-medium text-xs">
+          MV
+        </div>
+</div>
+</div>
+</header>
+<!-- MAIN WRAPPER -->
+<div class="flex min-h-[calc(100vh-61px)] w-full overflow-hidden">
+<!-- MAIN EXPANDED CONTENT AREA -->
+<main class="flex-1 min-w-0 px-4 sm:px-6 py-6 space-y-6 overflow-y-auto"><div class="flex flex-col w-full space-y-6">
+<!-- ASSET & ECONOMIC CONTEXT BANNER -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-6 shadow-sm">
+<div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+<div class="space-y-2">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-primary text-on-primary text-[11px] font-semibold tracking-wider uppercase font-mono">CFM-56 · Unit #01</span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium">Test Cell B-4</span>
+<span class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-lowest text-primary text-[11px] font-mono font-medium shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+            Live Stream Verified
+          </span>
+</div>
+<h1 class="font-headline text-2xl lg:text-3xl font-semibold text-on-surface tracking-tight">
+          Financial ROI &amp; Loss Avoidance
+        </h1>
+<p class="text-secondary text-sm flex flex-wrap items-center gap-x-3 gap-y-1">
+<span>Economic Engine: <span class="font-medium text-on-surface">Predictive Capital Preservation Model v3.1</span></span>
+<span class="hidden sm:inline opacity-40">/</span>
+<span>Currency: <span class="font-mono font-semibold text-on-surface">USD ($)</span></span>
+</p>
+</div>
+<!-- Lifecycle Progress Metric -->
+<div class="flex items-center gap-4 bg-surface-container-lowest p-3.5 rounded-xl shadow-xs min-w-[280px]">
+<div class="w-11 h-11 rounded-lg bg-surface-container flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[24px]">timelapse</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline text-xs mb-1">
+<span class="text-secondary font-medium">Cycle <span class="font-bold text-on-surface font-mono">108</span> of 200</span>
+<span class="text-tertiary font-mono font-semibold text-[11px]">Knee Point: C95</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden flex">
+<div class="bg-primary-container h-full" style="width: 47.5%;"></div>
+<div class="bg-primary h-full" style="width: 6.5%;"></div>
+<div class="bg-tertiary h-full" style="width: 6%;"></div>
+<div class="bg-surface-container-high h-full" style="width: 40%;"></div>
+</div>
+<p class="text-[10px] text-secondary mt-1 font-mono">Window: +12 Cycles until boundary</p>
+</div>
+</div>
+</div>
+</div>
+<!-- EXECUTIVE CAPITAL IMPACT KPI CARDS (Bento Grid) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+<!-- Hero Highlight KPI: Net Preserved -->
+<div class="sm:col-span-2 lg:col-span-2 rounded-xl bg-primary text-on-primary p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="absolute right-0 bottom-0 translate-x-4 translate-y-4 opacity-10 pointer-events-none text-on-primary">
+<span class="material-symbols-outlined text-[140px]">shield_with_heart</span>
+</div>
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs uppercase tracking-wider text-on-primary-container font-mono font-semibold">Net Capital Preserved</span>
+<span class="material-symbols-outlined text-on-primary-container text-lg">trending_up</span>
+</div>
+<div class="font-headline text-3xl sm:text-4xl font-bold tracking-tight text-on-primary mb-2">
+          +$340,000
+        </div>
+<p class="text-on-primary-container text-xs leading-relaxed max-w-sm">
+          Secured via planned Cycle 120 Stage-1 boroscope intervention, intercepting high-pressure cascade damage before casing deformation.
+        </p>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs text-on-primary-container border-t border-on-primary/15 font-mono">
+<span>Capital Retention Ratio</span>
+<span class="font-bold text-on-primary">70.8%</span>
+</div>
+</div>
+<!-- KPI 2: Unplanned Overhaul Avoided -->
+<div class="rounded-xl bg-surface-container p-5 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-xs text-secondary font-medium">Unplanned Overhaul</span>
+<span class="w-6 h-6 rounded-md bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+</span>
+</div>
+<div class="font-headline text-2xl font-bold text-on-surface mb-1 font-mono">
+          $480,000
+        </div>
+<p class="text-[11px] text-secondary leading-normal">
+          Full catastrophic HPT blade release benchmark with titanium containment repair.
+        </p>
+</div>
+<div class="mt-4 text-[10px] text-secondary font-mono">
+        Avoided Catastrophic Index: <span class="text-error font-semibold">Severe</span>
+</div>
+</div>
+<!-- KPI 3: Scheduled Intervention -->
+<div class="rounded-xl bg-surface-container p-5 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-xs text-secondary font-medium">Proactive Budget</span>
+<span class="w-6 h-6 rounded-md bg-primary-fixed text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">event_available</span>
+</span>
+</div>
+<div class="font-headline text-2xl font-bold text-on-surface mb-1 font-mono">
+          $140,000
+        </div>
+<p class="text-[11px] text-secondary leading-normal">
+          Planned HPT blade kit swap, boroscope inspection, and cell recertification.
+        </p>
+</div>
+<div class="mt-4 text-[10px] text-secondary font-mono">
+        Work Order: <span class="text-primary font-semibold">#WO-8924 Ready</span>
+</div>
+</div>
+<!-- KPI 4: ROI Multiple & AOG Savings -->
+<div class="rounded-xl bg-surface-container p-5 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-xs text-secondary font-medium">ROI &amp; Downtime</span>
+<span class="w-6 h-6 rounded-md bg-tertiary-fixed text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline text-2xl font-bold text-primary">3.43x</span>
+<span class="text-xs text-secondary font-mono font-medium">Yield</span>
+</div>
+<p class="text-[11px] text-secondary leading-normal">
+<span class="font-bold text-on-surface">114 hrs</span> AOG downtime saved at $11,400/hr flight disruption benchmark.
+        </p>
+</div>
+<div class="mt-4 text-[10px] text-secondary font-mono">
+        AOG Risk Hedge: <span class="text-primary font-semibold">$1.3M Total Risk</span>
+</div>
+</div>
+</div>
+<!-- MID SECTION: TRAJECTORY CHART & COMPARATIVE SCENARIOS -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Cumulative Fleet Capital Loss vs Savings Chart (7 Cols) -->
+<div class="lg:col-span-7 rounded-xl bg-surface-container p-6 shadow-sm flex flex-col">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+<div>
+<span class="text-[11px] font-mono uppercase tracking-wider text-secondary">Depreciation Velocity</span>
+<h2 class="font-headline text-lg font-semibold text-on-surface">Capital Loss vs. Preservation Trajectory</h2>
+</div>
+<div class="flex items-center gap-4 text-xs font-mono">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 bg-error rounded-full"></span>
+<span class="text-secondary">Unplanned Failure</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 bg-primary rounded-full"></span>
+<span class="text-secondary">Proactive Plan</span>
+</div>
+</div>
+</div>
+<!-- Trajectory Chart SVG -->
+<div class="relative w-full h-64 bg-surface-container-lowest rounded-xl p-4 overflow-hidden shadow-xs flex flex-col justify-end">
+<svg class="w-full h-full" fill="none" preserveAspectRatio="none" viewBox="0 0 700 240">
+<defs>
+<linearGradient id="savingsFill" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4a7c59" stop-opacity="0.22"></stop>
+<stop offset="100%" stop-color="#4a7c59" stop-opacity="0.02"></stop>
+</linearGradient>
+<linearGradient id="failureFill" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#b83230" stop-opacity="0.15"></stop>
+<stop offset="100%" stop-color="#b83230" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<!-- Horizontal Reference Gridlines -->
+<line stroke="#c4c8bc" stroke-dasharray="3 3" stroke-opacity="0.5" stroke-width="1" x1="50" x2="680" y1="30" y2="30"></line>
+<line stroke="#c4c8bc" stroke-dasharray="3 3" stroke-opacity="0.5" stroke-width="1" x1="50" x2="680" y1="80" y2="80"></line>
+<line stroke="#c4c8bc" stroke-dasharray="3 3" stroke-opacity="0.5" stroke-width="1" x1="50" x2="680" y1="130" y2="130"></line>
+<line stroke="#c4c8bc" stroke-dasharray="3 3" stroke-opacity="0.5" stroke-width="1" x1="50" x2="680" y1="180" y2="180"></line>
+<!-- Y Axis Labels -->
+<text fill="#6b6358" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="34">$600k</text>
+<text fill="#6b6358" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="84">$400k</text>
+<text fill="#6b6358" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="134">$200k</text>
+<text fill="#6b6358" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="184">$0</text>
+<!-- Shaded Preservation Delta Zone (Between Unplanned and Proactive from C120 forward) -->
+<path d="M 420 145 C 470 110, 540 60, 650 35 L 650 145 L 420 145 Z" fill="url(#savingsFill)"></path>
+<!-- Proactive Cost Path: Stays flat around $140k starting at intervention window -->
+<line stroke="#4a7c59" stroke-dasharray="6 4" stroke-width="2.5" x1="50" x2="650" y1="145" y2="145"></line>
+<circle cx="420" cy="145" fill="#4a7c59" r="4.5"></circle>
+<!-- Unplanned Catastrophic Curve: Climbs exponentially post-knee (Cycle 95) -->
+<path d="M 50 180 Q 250 178 332 170 T 420 135 T 520 80 T 650 35" fill="none" stroke="#b83230" stroke-width="2.5"></path>
+<!-- Cycle 95 Vertical Line: Knee Point -->
+<line stroke="#705c30" stroke-dasharray="2 2" stroke-width="1.5" x1="332" x2="332" y1="20" y2="200"></line>
+<!-- Cycle 108: Present Day -->
+<line stroke="#2e3230" stroke-width="1.5" x1="378" x2="378" y1="20" y2="200"></line>
+<circle cx="378" cy="155" fill="#2e3230" r="5"></circle>
+<!-- Cycle 120: Planned Target -->
+<line stroke="#4a7c59" stroke-dasharray="3 3" stroke-width="1.5" x1="420" x2="420" y1="20" y2="200"></line>
+<!-- Labels inside chart -->
+<text fill="#705c30" font-family="JetBrains Mono" font-size="9" font-weight="600" text-anchor="middle" x="332" y="15">C95 Knee</text>
+<text fill="#2e3230" font-family="JetBrains Mono" font-size="9" font-weight="700" text-anchor="middle" x="378" y="15">C108 NOW</text>
+<text fill="#4a7c59" font-family="JetBrains Mono" font-size="9" font-weight="700" text-anchor="middle" x="420" y="15">C120 Target</text>
+<!-- Delta Highlight Marker -->
+<rect fill="#faf6f0" fill-opacity="0.9" height="42" rx="6" stroke="#78a886" stroke-width="1" width="105" x="520" y="85"></rect>
+<text fill="#2a6038" font-family="JetBrains Mono" font-size="10" font-weight="700" x="528" y="101">Preserved Delta</text>
+<text fill="#4a7c59" font-family="Literata" font-size="13" font-weight="800" x="528" y="117">+$340,000</text>
+</svg>
+<!-- X-Axis Legend Labels -->
+<div class="flex justify-between text-[10px] font-mono text-secondary px-8 pt-2">
+<span>Cycle 20</span>
+<span>Cycle 60</span>
+<span>Cycle 95 (Knee)</span>
+<span>Cycle 120 (Target)</span>
+<span>Cycle 160</span>
+<span>Cycle 200</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 text-xs text-secondary px-1">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary">verified</span>
+          Telemetry synchronized with GE CFMI Maintenance Manual Task 72-00-00.
+        </span>
+<span class="font-mono text-[11px]">Variance Tolerance: ±3.2%</span>
+</div>
+</div>
+<!-- Comparative Scenario Modeling Breakdown (5 Cols) -->
+<div class="lg:col-span-5 rounded-xl bg-surface-container p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline text-lg font-semibold text-on-surface">Decision Scenario Matrix</h2>
+<span class="text-[10px] font-mono bg-surface-container-high px-2 py-0.5 rounded text-secondary font-medium">3 Paths</span>
+</div>
+<div class="space-y-3">
+<!-- Scenario A (Selected) -->
+<div class="p-3.5 rounded-xl bg-surface-container-lowest border-2 border-primary shadow-xs relative">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-primary text-on-primary flex items-center justify-center text-[10px] font-bold">A</span>
+<span class="text-xs font-bold text-on-surface font-headline">Predictive Early Intervention</span>
+</div>
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-primary-container text-on-primary-container">RECOMMENDED</span>
+</div>
+<p class="text-[11px] text-secondary mb-2">Intervene at Cycle 115–120. Execute borescope blade swap before cascade wear.</p>
+<div class="grid grid-cols-3 gap-2 text-center text-xs font-mono pt-2 border-t border-surface-container">
+<div>
+<span class="block text-[10px] text-secondary">Capital</span>
+<span class="font-bold text-primary">$140,000</span>
+</div>
+<div>
+<span class="block text-[10px] text-secondary">AOG Time</span>
+<span class="font-bold text-on-surface">14 hrs</span>
+</div>
+<div>
+<span class="block text-[10px] text-secondary">Longevity</span>
+<span class="font-bold text-on-surface">+920 cyc</span>
+</div>
+</div>
+</div>
+<!-- Scenario B -->
+<div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-xs opacity-90 hover:opacity-100 transition-opacity">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-surface-container-high text-secondary flex items-center justify-center text-[10px] font-bold">B</span>
+<span class="text-xs font-semibold text-on-surface font-headline">Run to Secondary Threshold</span>
+</div>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-secondary">3σ MSE Alert</span>
+</div>
+<p class="text-[11px] text-secondary mb-2">Intervene at Cycle 140. Risk of thermal erosion pitting on HPT rotor disk.</p>
+<div class="grid grid-cols-3 gap-2 text-center text-xs font-mono pt-2 border-t border-surface-container">
+<div>
+<span class="block text-[10px] text-secondary">Capital</span>
+<span class="font-bold text-on-surface">$310,000</span>
+</div>
+<div>
+<span class="block text-[10px] text-secondary">AOG Time</span>
+<span class="font-bold text-on-surface">48 hrs</span>
+</div>
+<div>
+<span class="block text-[10px] text-secondary">Longevity</span>
+<span class="font-bold text-tertiary">+340 cyc</span>
+</div>
+</div>
+</div>
+<!-- Scenario C -->
+<div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-xs opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-error-container text-error flex items-center justify-center text-[10px] font-bold">C</span>
+<span class="text-xs font-semibold text-on-surface font-headline">Run to Failure / Emergency FOD</span>
+</div>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-error-container text-error font-medium">Cycle 160+</span>
+</div>
+<p class="text-[11px] text-secondary mb-2">Catastrophic in-flight shutdown, blade shard release, mandatory complete core overhaul.</p>
+<div class="grid grid-cols-3 gap-2 text-center text-xs font-mono pt-2 border-t border-surface-container">
+<div>
+<span class="block text-[10px] text-secondary">Capital</span>
+<span class="font-bold text-error">$890,000+</span>
+</div>
+<div>
+<span class="block text-[10px] text-secondary">AOG Time</span>
+<span class="font-bold text-error">210+ hrs</span>
+</div>
+<div>
+<span class="block text-[10px] text-secondary">Longevity</span>
+<span class="font-bold text-error">0 (Writeoff)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs text-secondary font-mono">
+<span>Capital Gap (A vs C):</span>
+<span class="font-bold text-primary font-headline text-sm">-$750,000 Risk Margin</span>
+</div>
+</div>
+</div>
+<!-- COMPONENT ALLOCATION & VISUAL PARTS DEPRECIATION MATRIX -->
+<div class="rounded-xl bg-surface-container p-6 shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+<div>
+<span class="text-[11px] font-mono uppercase tracking-wider text-secondary">Cost Centers &amp; Line-Item Allocation</span>
+<h2 class="font-headline text-lg font-semibold text-on-surface">Proactive Intervention Budget Breakdown ($140,000)</h2>
+</div>
+<span class="text-xs text-secondary font-mono">Work Order: #WO-8924 Specification</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Component 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-3">
+<span class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">build_circle</span>
+</span>
+<span class="font-mono text-sm font-bold text-on-surface">$68,000</span>
+</div>
+<h3 class="font-headline font-semibold text-sm text-on-surface">Stage 1 HPT Rotor Blades</h3>
+<p class="text-xs text-secondary mt-1">48 high-temp single-crystal alloy blades. Pre-allocated from reserve inventory.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex justify-between items-center text-[11px] text-secondary font-mono">
+<span>Share</span>
+<span class="font-semibold text-on-surface">48.6% of budget</span>
+</div>
+</div>
+<!-- Component 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-3">
+<span class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[18px]">settings_input_component</span>
+</span>
+<span class="font-mono text-sm font-bold text-on-surface">$32,000</span>
+</div>
+<h3 class="font-headline font-semibold text-sm text-on-surface">HPT Nozzle Guide Vanes</h3>
+<p class="text-xs text-secondary mt-1">Partial ceramic thermal barrier coating refurbishment &amp; airflow calibration.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex justify-between items-center text-[11px] text-secondary font-mono">
+<span>Share</span>
+<span class="font-semibold text-on-surface">22.8% of budget</span>
+</div>
+</div>
+<!-- Component 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-3">
+<span class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">engineering</span>
+</span>
+<span class="font-mono text-sm font-bold text-on-surface">$22,000</span>
+</div>
+<h3 class="font-headline font-semibold text-sm text-on-surface">Specialized Tech Labor</h3>
+<p class="text-xs text-secondary mt-1">Test cell recertification team (Lead M. Vance) &amp; optical boroscope measurement.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex justify-between items-center text-[11px] text-secondary font-mono">
+<span>Share</span>
+<span class="font-semibold text-on-surface">15.7% of budget</span>
+</div>
+</div>
+<!-- Component 4 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-3">
+<span class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">flight_takeoff</span>
+</span>
+<span class="font-mono text-sm font-bold text-on-surface">$18,000</span>
+</div>
+<h3 class="font-headline font-semibold text-sm text-on-surface">Logistics &amp; AOG Offset</h3>
+<p class="text-xs text-secondary mt-1">Expedited freight staging, spare seal gaskets, and contingency risk cover.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex justify-between items-center text-[11px] text-secondary font-mono">
+<span>Share</span>
+<span class="font-semibold text-on-surface">12.9% of budget</span>
+</div>
+</div>
+</div>
+<!-- Visual Photographic Proof Card for Turbine Health Inspection -->
+<div class="mt-5 p-4 rounded-xl bg-surface-container-low flex flex-col md:flex-row items-center gap-5">
+<div class="w-full md:w-44 h-28 rounded-lg overflow-hidden flex-shrink-0 relative shadow-inner">
+<img class="w-full h-full object-cover" data-alt="Close up boroscope industrial camera capture showing aerospace jet engine high pressure turbine blade edges under warm workshop illumination, showing subtle early thermal coating micro cracks on golden alloy metal surfaces in an aerospace maintenance hangar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtuKlFcQf5aLY4W8puR02PHDTrW4Ef0E1MzXZTRP9t8bZSb-_IqvF_-88lLPdLjSRE8pXbn3qaGMHckYrG4H5py3RCN5bwiLLGMB4m03e9sC1qzKuKiHUeI5IanxK9WL2ZM2bjV930LS9zUlV8MFM1mS9xnwuzxFXebk_PWe5xhgwYEynadTUAyJtNjBQPEwiZL8Ldfji9vRI1L-pB1Z6TJJ6HpGflDlceZIvfqKs8">
+<span class="absolute bottom-1.5 left-1.5 bg-surface/90 text-on-surface text-[9px] font-mono px-1.5 py-0.5 rounded">
+          BOROSCOPE C108
+        </span>
+</div>
+<div class="flex-1 space-y-1 text-xs">
+<div class="flex items-center gap-2">
+<span class="font-headline font-bold text-on-surface">Borescope Inspection Telemetry Evidence</span>
+<span class="text-[10px] font-mono text-tertiary bg-tertiary-fixed px-1.5 py-0.2 rounded font-semibold">STAGE 1 BLADE #17</span>
+</div>
+<p class="text-secondary leading-relaxed">
+          Optical depth profiling verifies 0.42mm edge clearance expansion. Immediate swap prevents catastrophic tip shredding at sustained EGT temperatures above 940°C.
+        </p>
+<div class="flex items-center gap-4 text-[11px] font-mono text-primary pt-1">
+<span>Confidence: 98.4%</span>
+<span>•</span>
+<span>Mean Cycle to Fatigue Rupture: Cycle 158</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ACTION FOOTER & CFO DECISION BAR -->
+<div class="rounded-xl bg-surface-container-lowest p-5 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm text-on-surface">CFO Executive Authorization Pending</h4>
+<p class="text-xs text-secondary">Capital disbursement of $140,000 saves projected $340,000 net capital loss this quarter.</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-end">
+<!-- Secondary Action: PDF Export -->
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-colors shadow-xs">
+<span class="material-symbols-outlined text-[17px] text-secondary">picture_as_pdf</span>
+<span>Executive PDF</span>
+</button>
+<!-- Secondary Action: Simulate Fleetwide -->
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-colors shadow-xs">
+<span class="material-symbols-outlined text-[17px] text-tertiary">scatter_plot</span>
+<span>Fleet Simulation</span>
+</button>
+<!-- Primary Action: Approve WO-8924 -->
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-[#3d694a] text-on-primary text-xs font-semibold transition-all shadow-sm" id="approveCapitalBtn">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Approve Allocation for #WO-8924</span>
+</button>
+</div>
+</div>
+</div>
+<!-- INTERACTIVE SCRIPT FOR CONFIRMATION MICRO-INTERACTION -->
+<script>
+  (function() {
+    const approveBtn = document.getElementById('approveCapitalBtn');
+    if (approveBtn) {
+      approveBtn.addEventListener('click', function() {
+        const originalContent = this.innerHTML;
+        this.innerHTML = `
+          <span class="material-symbols-outlined text-[18px] animate-spin">refresh</span>
+          <span>Transacting ERP #WO-8924...</span>
+        `;
+        this.disabled = true;
+
+        setTimeout(() => {
+          this.classList.remove('bg-primary', 'hover:bg-[#3d694a]');
+          this.classList.add('bg-primary-container', 'text-on-primary-container');
+          this.innerHTML = `
+            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+            <span>$140,000 Allocated to Cell B-4</span>
+          `;
+
+          // Trigger shell toast if exists
+          const dispatchToast = document.getElementById('dispatchToast');
+          if (dispatchToast) {
+            dispatchToast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            dispatchToast.classList.add('translate-y-0', 'opacity-100');
+          }
+        }, 1200);
+      });
+    }
+  })();
+</script></main>
+<!-- DOCKED RIGHT SIDE DRAWER: RELIABILITY COPILOT -->
+
+</div>
+<!-- DISPATCH NOTIFICATION TOAST -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 px-4 py-3 rounded-2xl bg-surface border border-primary shadow-lg max-w-sm" id="dispatchToast">
+<div class="w-8 h-8 rounded-xl bg-primary-container text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</div>
+<div class="text-xs">
+<h5 class="font-bold text-on-surface font-headline">Work Order WO-8924 Dispatched</h5>
+<p class="text-secondary">Assigned to Lead Tech M. Vance for Cell B-4.</p>
+</div>
+<button class="text-secondary hover:text-on-surface ml-auto" id="dismissToast">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div><button id="copilotFloatingBtn" class="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-primary hover:bg-[#3d694a] flex items-center justify-center shadow-lg transition-transform hover:scale-105 border border-white/20 text-white cursor-pointer" title="Open Reliability Copilot"><svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></button>
+<!-- SCRIPT FOR PLAYBACK & SYNC -->
+<script>
+    (function() {
+      let currentCycle = 108;
+      const maxCycle = 200;
+      let isPlaying = false;
+      let playTimer = null;
+
+      const cycleIndicator = document.getElementById('cycleIndicator');
+      const rulDisplay = document.getElementById('rulDisplay');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const playIcon = document.getElementById('playIcon');
+      const stepBackBtn = document.getElementById('stepBackBtn');
+      const stepFwdBtn = document.getElementById('stepFwdBtn');
+      const syncLine = document.getElementById('syncLine');
+      const syncPoint = document.getElementById('syncPoint');
+      const chartTooltip = document.getElementById('chartTooltip');
+
+      const dispatchBtn = document.getElementById('dispatchWorkOrderBtn');
+      const dispatchToast = document.getElementById('dispatchToast');
+      const dismissToast = document.getElementById('dismissToast');
+
+      function updateCycle(cycle) {
+        currentCycle = Math.max(1, Math.min(maxCycle, cycle));
+        if (cycleIndicator) cycleIndicator.innerText = currentCycle;
+
+        // Approximate RUL based on cycle: 200 - cycle minus wear acceleration past cycle 95
+        let calculatedRul = Math.max(0, 200 - currentCycle);
+        if (currentCycle > 95) {
+          calculatedRul = Math.max(0, Math.round(200 - currentCycle - (currentCycle - 95) * 0.2));
+        }
+        if (rulDisplay) rulDisplay.innerText = calculatedRul;
+
+        // Coordinate mapped to SVG 800px width viewBox
+        const svgX = (currentCycle / maxCycle) * 800;
+        if (syncLine) {
+          syncLine.setAttribute('x1', svgX);
+          syncLine.setAttribute('x2', svgX);
+        }
+        if (syncPoint) {
+          syncPoint.setAttribute('cx', svgX);
+          // calculate rough curve height
+          const curveY = 20 + (currentCycle / maxCycle) * 155;
+          syncPoint.setAttribute('cy', curveY);
+        }
+
+        const percentage = (currentCycle / maxCycle) * 100;
+        if (chartTooltip) {
+          chartTooltip.style.left = percentage + '%';
+          chartTooltip.innerHTML = `
+            <span class="text-secondary">Cycle: </span>
+            <span class="font-bold text-on-surface">${currentCycle}</span>
+            <div class="text-primary font-semibold">${calculatedRul} Cycles RUL</div>
+          `;
+        }
+      }
+
+      if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', () => {
+          isPlaying = !isPlaying;
+          if (isPlaying) {
+            playIcon.innerText = 'pause';
+            playTimer = setInterval(() => {
+              if (currentCycle >= maxCycle) currentCycle = 1;
+              else currentCycle += 1;
+              updateCycle(currentCycle);
+            }, 120);
+          } else {
+            playIcon.innerText = 'play_arrow';
+            clearInterval(playTimer);
+          }
+        });
+      }
+
+      if (stepBackBtn) stepBackBtn.addEventListener('click', () => updateCycle(currentCycle - 5));
+      if (stepFwdBtn) stepFwdBtn.addEventListener('click', () => updateCycle(currentCycle + 5));
+
+      if (dispatchBtn && dispatchToast) {
+        dispatchBtn.addEventListener('click', () => {
+          dispatchToast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+          dispatchToast.classList.add('translate-y-0', 'opacity-100');
+          setTimeout(() => {
+            dispatchToast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            dispatchToast.classList.remove('translate-y-0', 'opacity-100');
+          }, 4500);
+        });
+      }
+
+      if (dismissToast && dispatchToast) {
+        dismissToast.addEventListener('click', () => {
+          dispatchToast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        });
+      }
+
+      updateCycle(108);
+    })();
+  </script>
+
+
+</body></html>

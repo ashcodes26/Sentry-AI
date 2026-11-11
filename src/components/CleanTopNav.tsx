@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Plus, Bot, Code, ChevronDown } from 'lucide-react';
+import { Plus, Bot, ChevronDown, ClipboardList } from 'lucide-react';
 import { MachineAsset } from '../types/telemetry';
 
 interface CleanTopNavProps {
@@ -7,11 +7,15 @@ interface CleanTopNavProps {
   selectedAssetId: string;
   onSelectAsset: (id: string) => void;
   onOpenAddModal: () => void;
-  activeTab: 'overview' | 'models' | 'roi';
-  onSelectTab: (tab: 'overview' | 'models' | 'roi') => void;
+  activeTab: 'overview' | 'models' | 'roi' | 'maintenance';
+  onSelectTab: (tab: 'overview' | 'models' | 'roi' | 'maintenance') => void;
   isCopilotOpen: boolean;
   onToggleCopilot: () => void;
-  onOpenCodeModal: () => void;
+  workOrderCount?: number;
+  systemStatus?: {
+    mlEngine?: { online: boolean; target?: string };
+    copilotAi?: { configured: boolean; model?: string };
+  } | null;
 }
 
 export const CleanTopNav: React.FC<CleanTopNavProps> = ({
@@ -23,105 +27,134 @@ export const CleanTopNav: React.FC<CleanTopNavProps> = ({
   onSelectTab,
   isCopilotOpen,
   onToggleCopilot,
-  onOpenCodeModal,
+  workOrderCount = 0,
+  systemStatus,
 }) => {
-  const currentAsset = assets.find((a) => a.id === selectedAssetId) || assets[0];
-
   return (
-    <header className="border-b border-slate-700/60 bg-gradient-to-r from-[#172235]/95 via-[#1b263b]/95 to-[#172235]/95 backdrop-blur-md px-6 py-3 sticky top-0 z-30 shadow-lg shadow-black/10">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
+    <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-surface-container-highest px-6 py-3 transition-all shadow-sm">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
         {/* Left: Brand & Machine Asset Selector */}
-        <div className="flex items-center gap-5">
-          <div className="flex items-center gap-2.5 text-slate-100 font-semibold text-sm tracking-tight whitespace-nowrap">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500/25 to-indigo-500/20 border border-blue-400/40 flex items-center justify-center text-blue-400 shadow-inner">
-              <Activity className="w-4 h-4 text-blue-400" />
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm">
+              <span className="material-symbols-outlined text-[20px]">psychology</span>
             </div>
-            <span className="bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent font-bold">
-              PredictIQ
-            </span>
-            <span className="text-slate-600 font-normal">/</span>
-            <span className="text-xs text-slate-400 font-normal">Fleet Monitor</span>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-headline font-semibold text-lg text-on-surface tracking-tight">
+                  Sentry IQ
+                </span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary-container text-on-primary-container font-semibold tracking-wide uppercase">
+                  FLEET
+                </span>
+              </div>
+            </div>
           </div>
 
+          <div className="h-5 w-px bg-surface-container-highest hidden sm:block" />
+
           {/* Machine Dropdown Selector */}
-          <div className="relative flex items-center">
+          <div className="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl border border-surface-container-highest/80 hover:border-outline/40 transition-colors">
+            <span className="material-symbols-outlined text-primary text-[18px]">turbine</span>
             <select
               value={selectedAssetId}
               onChange={(e) => onSelectAsset(e.target.value)}
-              className="bg-[#1f2c42] text-xs font-medium text-slate-100 border border-slate-600/60 rounded-lg pl-3 pr-8 py-1.5 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400/30 appearance-none cursor-pointer shadow-sm hover:bg-[#263752] transition-colors"
+              className="bg-transparent font-medium text-xs text-on-surface focus:outline-none cursor-pointer pr-4 appearance-none"
             >
               {assets.map((asset) => (
-                <option key={asset.id} value={asset.id} className="bg-[#162030] text-slate-100">
+                <option key={asset.id} value={asset.id} className="bg-surface text-on-surface">
                   {asset.name} ({asset.category})
                 </option>
               ))}
             </select>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 text-secondary pointer-events-none -ml-2" />
           </div>
 
           <button
             onClick={onOpenAddModal}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-slate-200 hover:text-white bg-[#1f2c42] hover:bg-[#283955] border border-slate-600/60 rounded-lg transition-colors whitespace-nowrap shadow-sm"
+            className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 text-xs text-secondary hover:text-on-surface bg-surface-container hover:bg-surface-container-high border border-surface-container-highest rounded-xl transition-all"
+            title="Register new machine asset"
           >
-            <Plus className="w-3.5 h-3.5 text-blue-400" />
+            <Plus className="w-3.5 h-3.5 text-primary" />
             <span>Add Asset</span>
           </button>
         </div>
 
-        {/* Center: Simplified Clean View Tabs */}
-        <div className="hidden md:flex items-center gap-1 bg-[#131b29] p-1 rounded-lg border border-slate-700/60 shadow-inner">
+        {/* Center: Navigation Tabs matching Stitch */}
+        <nav className="hidden md:flex items-center bg-surface-container p-1 rounded-xl border border-surface-container-highest text-xs font-semibold text-secondary">
           <button
             onClick={() => onSelectTab('overview')}
-            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
               activeTab === 'overview'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-sm'
-                : 'text-slate-300 hover:text-white hover:bg-slate-700/40'
+                ? 'bg-surface text-on-surface shadow-sm font-semibold'
+                : 'hover:text-on-surface'
             }`}
           >
             Health Overview
           </button>
           <button
             onClick={() => onSelectTab('models')}
-            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
               activeTab === 'models'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-sm'
-                : 'text-slate-300 hover:text-white hover:bg-slate-700/40'
+                ? 'bg-surface text-on-surface shadow-sm font-semibold'
+                : 'hover:text-on-surface'
             }`}
           >
-            AI Diagnostics & RUL
+            Diagnostics &amp; RUL
           </button>
           <button
             onClick={() => onSelectTab('roi')}
-            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
               activeTab === 'roi'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-sm'
-                : 'text-slate-300 hover:text-white hover:bg-slate-700/40'
+                ? 'bg-surface text-on-surface shadow-sm font-semibold'
+                : 'hover:text-on-surface'
             }`}
           >
             Financial ROI
           </button>
-        </div>
+          <button
+            onClick={() => onSelectTab('maintenance')}
+            className={`px-3.5 py-1.5 rounded-lg transition-all ${
+              activeTab === 'maintenance'
+                ? 'bg-surface text-on-surface shadow-sm font-semibold'
+                : 'hover:text-on-surface'
+            }`}
+          >
+            Maintenance Ops
+          </button>
+        </nav>
 
-        {/* Right: Copilot Toggle & Code Export */}
+        {/* Right: Status Pill & Action Buttons */}
         <div className="flex items-center gap-2.5">
+          {/* Work Orders Pill */}
+          <button
+            onClick={() => onSelectTab('maintenance')}
+            className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${
+              activeTab === 'maintenance'
+                ? 'bg-surface text-on-surface border-primary shadow-sm font-semibold'
+                : 'bg-surface-container hover:bg-surface-container-high border-surface-container-highest text-on-surface'
+            }`}
+          >
+            <ClipboardList className="w-4 h-4 text-tertiary" />
+            <span className="hidden sm:inline">Orders</span>
+            {workOrderCount > 0 && (
+              <span className="w-4 h-4 rounded-full bg-tertiary text-on-tertiary text-[10px] flex items-center justify-center font-bold font-mono">
+                {workOrderCount}
+              </span>
+            )}
+          </button>
+
+          {/* AI Copilot Toggle */}
           <button
             onClick={onToggleCopilot}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
               isCopilotOpen
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-500 shadow-md'
-                : 'bg-[#1f2c42] text-slate-200 border-slate-600/60 hover:text-white hover:bg-[#283955] shadow-sm'
+                ? 'bg-primary text-on-primary border-primary shadow-sm'
+                : 'bg-surface-container hover:bg-surface-container-high border-surface-container-highest text-on-surface'
             }`}
           >
             <Bot className="w-3.5 h-3.5" />
-            <span>AI Copilot</span>
-          </button>
-
-          <button
-            onClick={onOpenCodeModal}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white bg-[#1f2c42] hover:bg-[#283955] border border-slate-600/60 rounded-lg transition-colors shadow-sm"
-          >
-            <Code className="w-3.5 h-3.5 text-indigo-400" />
-            <span>app.py</span>
+            <span className="hidden sm:inline">Copilot</span>
           </button>
         </div>
       </div>

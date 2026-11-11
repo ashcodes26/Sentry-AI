@@ -1,0 +1,727 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400&amp;family=Nunito+Sans:ital,opsz,wght@0,6..12,300..800;1,6..12,400&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary": "#6b6358",
+            "surface": "#faf6f0",
+            "background": "#f5f1ea",
+            "on-tertiary": "#ffffff",
+            "on-background": "#2e3230",
+            "surface-container-high": "#eae6de",
+            "on-surface": "#2e3230",
+            "on-primary-fixed-variant": "#2a6038",
+            "outline": "#74796e",
+            "on-error-container": "#690005",
+            "inverse-on-surface": "#f5f0e8",
+            "surface-dim": "#dbd7cf",
+            "tertiary-fixed": "#f8e0a8",
+            "surface-bright": "#faf6f0",
+            "on-error": "#ffffff",
+            "outline-variant": "#c4c8bc",
+            "on-tertiary-fixed-variant": "#554020",
+            "secondary-container": "#f0e8db",
+            "on-tertiary-container": "#554020",
+            "primary-fixed-dim": "#8ecf9e",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#d4ccbf",
+            "error": "#b83230",
+            "primary": "#4a7c59",
+            "surface-container-low": "#f5f1ea",
+            "tertiary-container": "#c4a66a",
+            "surface-container": "#f0ece4",
+            "secondary-fixed": "#f0e8db",
+            "on-primary-container": "#173b22",
+            "on-secondary-fixed": "#1e1a13",
+            "tertiary-fixed-dim": "#dcc48e",
+            "primary-fixed": "#c8e8d0",
+            "error-container": "#fceae9",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#5e5548",
+            "on-surface-variant": "#5a5e5a",
+            "surface-tint": "#4a7c59",
+            "on-primary-fixed": "#002110",
+            "inverse-primary": "#8ecf9e",
+            "on-tertiary-fixed": "#221a05",
+            "surface-container-highest": "#e4e0d8",
+            "surface-variant": "#e4e0d8",
+            "on-secondary-fixed-variant": "#4a4538",
+            "tertiary": "#8a6627",
+            "inverse-surface": "#2e3230",
+            "primary-container": "#d7e8db"
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.25rem",
+            "2xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Literata", "serif"],
+            "display": ["Literata", "serif"],
+            "body": ["Nunito Sans", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #faf6f0; }
+    ::-webkit-scrollbar-thumb { background: #d4ccbf; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- TOP APP HEADER -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-surface-container-highest px-6 py-3 transition-all">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+<!-- Brand & Unit Selector -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline font-semibold text-lg text-on-surface tracking-tight">Sentry IQ</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-primary-container text-on-primary-container font-semibold tracking-wide">FLEET</span>
+</div>
+<p class="text-xs text-secondary leading-none">Aerospace Reliability Intelligence</p>
+</div>
+</div>
+<div class="h-5 w-px bg-surface-container-highest hidden sm:block"></div>
+<!-- Asset Selector -->
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl border border-surface-container-highest/80 hover:border-outline/40 transition-colors">
+<span class="material-symbols-outlined text-primary text-[18px]">save_as</span>
+<select class="bg-transparent font-medium text-xs text-on-surface focus:outline-none cursor-pointer pr-2">
+<option value="cfm56">CFM-56 · Unit #01 (Test Cell B-4)</option>
+<option value="hv230">HV Transformer 230kV (Substation A)</option>
+<option value="pump">Centrifugal Slurry Pump #04</option>
+</select>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="hidden md:flex items-center bg-surface-container p-1 rounded-xl border border-surface-container-highest text-xs font-semibold text-secondary">
+<a class="px-3.5 py-1.5 rounded-lg bg-surface text-on-surface shadow-sm font-semibold transition-all" href="#">Health Overview</a>
+<a class="px-3.5 py-1.5 rounded-lg hover:text-on-surface transition-all" href="#">Diagnostics &amp; RUL</a>
+<a class="px-3.5 py-1.5 rounded-lg hover:text-on-surface transition-all" href="#">Financial ROI</a>
+<a class="px-3.5 py-1.5 rounded-lg hover:text-on-surface transition-all" href="#">Maintenance Ops</a>
+</nav>
+<!-- Status & Quick Controls -->
+<div class="flex items-center gap-2.5">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-container border border-surface-container-highest text-xs text-secondary font-mono">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="hidden sm:inline">Telemetry Active</span>
+<span class="text-on-surface font-semibold">100Hz</span>
+</div>
+<button class="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-surface-container-highest text-xs font-medium text-on-surface transition-all">
+<span class="material-symbols-outlined text-[17px] text-tertiary">assignment</span>
+<span>Orders</span>
+<span class="w-4 h-4 rounded-full bg-tertiary text-on-tertiary text-[10px] flex items-center justify-center font-bold">3</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-surface-container-highest flex items-center justify-center text-on-surface-variant font-medium text-xs">
+          MV
+        </div>
+</div>
+</div>
+</header>
+<!-- MAIN WRAPPER -->
+<div class="flex min-h-[calc(100vh-61px)] w-full overflow-hidden">
+<!-- MAIN EXPANDED CONTENT AREA -->
+<main class="flex-1 min-w-0 px-4 sm:px-6 py-6 space-y-6 overflow-y-auto"><div class="flex flex-col w-full gap-8">
+<!-- Asset Context Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-6 shadow-sm">
+<div class="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+<div class="space-y-2">
+<div class="flex flex-wrap items-center gap-3">
+<span class="px-2.5 py-1 rounded-full bg-primary text-on-primary text-xs font-semibold tracking-wide uppercase">Active Station</span>
+<span class="font-mono text-xs text-secondary">CFM56-7B27 / S/N: 884-9021</span>
+<span class="inline-flex items-center gap-1.5 text-xs text-secondary font-mono">
+<span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+            Telemetry Stream 100Hz
+          </span>
+</div>
+<h1 class="text-2xl md:text-3xl font-headline font-bold text-on-surface tracking-tight">
+          CFM-56 · Unit #01 <span class="text-secondary font-normal text-xl md:text-2xl">| Test Cell B-4</span>
+</h1>
+<p class="text-sm text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">engineering</span>
+          Assigned Lead Specialist: <strong class="text-on-surface font-semibold">M. Vance (Cert. FAA-A&amp;P 40291)</strong>
+</p>
+</div>
+<div class="flex flex-wrap items-center gap-3 sm:gap-4 bg-surface-container-low p-3.5 rounded-xl shadow-sm">
+<div class="px-3 py-1.5">
+<p class="text-[11px] font-bold text-secondary uppercase tracking-wider font-mono">Duty Cycles</p>
+<p class="text-xl font-headline font-bold text-on-surface">108 <span class="text-xs font-normal text-secondary">/ 200</span></p>
+</div>
+<div class="h-8 w-px bg-surface-container-highest"></div>
+<div class="px-3 py-1.5">
+<p class="text-[11px] font-bold text-secondary uppercase tracking-wider font-mono">Inspection Buffer</p>
+<p class="text-xl font-headline font-bold text-tertiary">38h <span class="text-xs font-normal text-secondary">Remain</span></p>
+</div>
+<div class="h-8 w-px bg-surface-container-highest"></div>
+<div class="px-3 py-1.5">
+<p class="text-[11px] font-bold text-secondary uppercase tracking-wider font-mono">Tooling Status</p>
+<span class="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> 100% Staged
+          </span>
+</div>
+</div>
+</div>
+</div>
+<!-- KPI Cards Metric Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs uppercase font-mono tracking-wider text-secondary font-semibold">Active Dispatches</span>
+<div class="h-8 w-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">assignment_late</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">02</span>
+<span class="text-xs text-secondary">Tasks In-Flight</span>
+</div>
+<div class="mt-4 flex items-center gap-1.5 text-xs text-primary font-medium">
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+<span>1 Immediate · 1 Under Avionics</span>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs uppercase font-mono tracking-wider text-secondary font-semibold">Critical Window</span>
+<div class="h-8 w-8 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">timelapse</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">38h</span>
+<span class="text-xs text-tertiary font-semibold">Pre-Cycle 120</span>
+</div>
+<div class="mt-4 flex items-center gap-1.5 text-xs text-secondary font-mono">
+<span class="material-symbols-outlined text-[15px] text-tertiary">priority_high</span>
+<span>Optimal Window: Cycle 115–120</span>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs uppercase font-mono tracking-wider text-secondary font-semibold">Parts Readiness</span>
+<div class="h-8 w-8 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">100%</span>
+<span class="text-xs text-primary font-semibold">Allocated</span>
+</div>
+<div class="mt-4 flex items-center gap-1.5 text-xs text-secondary truncate">
+<span class="material-symbols-outlined text-[15px] text-primary">pin_drop</span>
+<span class="truncate">Staged at Bay B-4 Kitting Cart</span>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs uppercase font-mono tracking-wider text-secondary font-semibold">Certified Crew</span>
+<div class="h-8 w-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">group</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">04</span>
+<span class="text-xs text-secondary">Specialists</span>
+</div>
+<div class="mt-4 flex items-center gap-1.5 text-xs text-primary font-medium">
+<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+<span>Level-III NDT Tech on Standby</span>
+</div>
+</div>
+</div>
+<!-- Priority Work Order Detail Bento Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Main Checklist and Telemetry Context (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="rounded-xl bg-surface-container-low p-6 sm:p-8 shadow-sm space-y-6">
+<!-- Header Info -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2.5">
+<span class="px-2.5 py-0.5 rounded-md bg-tertiary-fixed text-on-tertiary-fixed text-xs font-mono font-bold tracking-tight">HIGH PRIORITY</span>
+<span class="text-xs font-mono text-secondary">#WO-8924 · Dispatch ID</span>
+</div>
+<h2 class="text-xl sm:text-2xl font-headline font-bold text-on-surface">
+              CFM-56 HPT Stage 1 Boroscope Inspection &amp; Tip Clearance Audit
+            </h2>
+</div>
+<div class="text-left sm:text-right">
+<span class="text-xs font-mono text-secondary uppercase block">Execution Limit</span>
+<span class="text-sm font-semibold text-error flex items-center sm:justify-end gap-1">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+              Within 48h (Pre-Cycle 120)
+            </span>
+</div>
+</div>
+<!-- Predictive AI Alert Card -->
+<div class="rounded-xl bg-surface-container p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-start">
+<div class="h-10 w-10 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">smart_toy</span>
+</div>
+<div class="space-y-1 flex-1">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<h4 class="text-sm font-headline font-semibold text-on-surface">Automated Root-Cause Correlation (Bi-GRU v4.2)</h4>
+<span class="text-xs font-mono text-tertiary font-medium">Flagged Cycle 104</span>
+</div>
+<p class="text-xs text-secondary leading-relaxed">
+              Thermodynamic anomaly isolated across high-pressure turbine telemetry:
+              <span class="font-mono text-on-surface font-semibold">T50 +48.6°R</span> delta and
+              <span class="font-mono text-on-surface font-semibold">Ps30 -11.5 psia</span> loss. Pattern correlates with 94.2% confidence to localized shroud ceramic wear and trailing edge tip degradation.
+            </p>
+</div>
+</div>
+<!-- Digital Inspection Checklist -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-headline font-bold text-on-surface uppercase tracking-wide">Digital Execution Traveler</h3>
+<span class="text-xs font-mono text-secondary">1 of 4 Steps Verified</span>
+</div>
+<div class="space-y-2.5">
+<!-- Step 1 (Completed) -->
+<div class="flex items-start gap-3 p-3.5 rounded-lg bg-surface-container-high/60 transition-colors">
+<div class="mt-0.5 text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<span class="text-xs sm:text-sm font-semibold text-on-surface line-through opacity-70">Step 1: Optical access port 3 &amp; 4 borescope plug removal</span>
+<span class="text-[11px] font-mono text-primary font-semibold">Passed · Tech B. Rossi</span>
+</div>
+<p class="text-xs text-secondary mt-0.5">Plug thread condition inspected, lockwire discarded, borescope guide insert installed.</p>
+</div>
+</div>
+<!-- Step 2 (Active) -->
+<div class="flex items-start gap-3 p-3.5 rounded-lg bg-surface-container shadow-sm border-l-4 border-primary transition-colors">
+<div class="mt-0.5 text-primary flex-shrink-0 animate-pulse">
+<span class="material-symbols-outlined text-[20px]">radio_button_checked</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<span class="text-xs sm:text-sm font-bold text-on-surface">Step 2: 360° turbine blade tip clearance high-res optical scan</span>
+<span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-primary text-on-primary font-semibold">In Progress</span>
+</div>
+<p class="text-xs text-secondary mt-1">Lead Tech M. Vance performing 36-blade clockwise index sweep using 3D stereo measurement optic.</p>
+<!-- Visual Mini Clearance Gauge -->
+<div class="mt-3 p-3 rounded-lg bg-surface-container-low flex flex-col sm:flex-row items-center gap-4">
+<div class="w-full sm:w-1/2">
+<div class="flex justify-between text-[11px] font-mono mb-1">
+<span class="text-secondary">Stage Sweep Progress</span>
+<span class="text-on-surface font-bold">22 / 36 Blades</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 61%;"></div>
+</div>
+</div>
+<div class="text-xs font-mono text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[16px]">visibility</span>
+<span>Avg Gap: <strong class="text-on-surface">1.24 mm</strong> (Nom: 1.10 mm)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 3 (Pending) -->
+<div class="flex items-start gap-3 p-3.5 rounded-lg bg-surface-container-low transition-colors opacity-75 hover:opacity-100">
+<div class="mt-0.5 text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">radio_button_unchecked</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<span class="text-xs sm:text-sm font-medium text-on-surface">Step 3: Fluorescent penetrant crack inspection on trailing edges</span>
+<span class="text-[11px] font-mono text-secondary">Pending Step 2</span>
+</div>
+<p class="text-xs text-secondary mt-0.5">High-intensity UV optical probe excitation targeting blade tips #14 through #19.</p>
+</div>
+</div>
+<!-- Step 4 (Pending) -->
+<div class="flex items-start gap-3 p-3.5 rounded-lg bg-surface-container-low transition-colors opacity-75 hover:opacity-100">
+<div class="mt-0.5 text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">radio_button_unchecked</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<span class="text-xs sm:text-sm font-medium text-on-surface">Step 4: Digital twin autoencoder recalibration &amp; sign-off</span>
+<span class="text-[11px] font-mono text-secondary">Awaiting Visual Log</span>
+</div>
+<p class="text-xs text-secondary mt-0.5">Telemetry baseline upload to SENTRY Core; clearing thermodynamic anomaly state.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Control Bar -->
+<div class="pt-4 flex flex-wrap items-center gap-3">
+<button class="px-4 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:opacity-90 transition-all flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[17px]">edit_note</span>
+            Update Checklist State
+          </button>
+<button class="px-4 py-2.5 rounded-xl bg-surface-container-high text-on-surface text-xs font-semibold hover:bg-surface-variant transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[17px]">print</span>
+            Print Traveler (#WO-8924)
+          </button>
+<button class="px-4 py-2.5 rounded-xl bg-surface-container-high text-on-surface text-xs font-semibold hover:bg-surface-variant transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[17px]">build</span>
+            Request Tooling
+          </button>
+<button class="px-4 py-2.5 rounded-xl bg-secondary-container text-on-secondary-container text-xs font-semibold hover:opacity-90 transition-all flex items-center gap-2 ml-auto">
+<span class="material-symbols-outlined text-[17px]">verified</span>
+            Sign-Off &amp; Fleet Log
+          </button>
+</div>
+</div>
+</div>
+<!-- Side Tools & Test Cell Bay Schedule (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Staged Tooling Checklist -->
+<div class="rounded-xl bg-surface-container-low p-6 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-headline font-bold text-on-surface uppercase tracking-wide">Staged Tooling Kit</h3>
+<span class="h-2 w-2 rounded-full bg-primary"></span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container">
+<div class="h-8 w-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">videocam</span>
+</div>
+<div class="min-w-0 flex-1">
+<p class="text-xs font-bold text-on-surface truncate">Olympus IPLEX G Lite 3D</p>
+<p class="text-[11px] text-secondary font-mono">Calibrated · S/N: OLY-994</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container">
+<div class="h-8 w-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">architecture</span>
+</div>
+<div class="min-w-0 flex-1">
+<p class="text-xs font-bold text-on-surface truncate">CFM-56 Rigid Guide Tubes</p>
+<p class="text-[11px] text-secondary font-mono">Port 3/4 Curvature Set</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container">
+<div class="h-8 w-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">straighten</span>
+</div>
+<div class="min-w-0 flex-1">
+<p class="text-xs font-bold text-on-surface truncate">Feeler Array &amp; Step Wedge</p>
+<p class="text-[11px] text-secondary font-mono">NIST Standard Traceable</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+</div>
+</div>
+</div>
+<!-- Test Cell B-4 Schedule Timeline -->
+<div class="rounded-xl bg-surface-container-low p-6 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="text-sm font-headline font-bold text-on-surface">Test Cell B-4 Bay Window</h3>
+<p class="text-xs text-secondary">Next 72-Hour Operating Plan</p>
+</div>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono bg-primary-fixed text-on-primary-fixed font-bold">RESERVED</span>
+</div>
+<div class="space-y-3 font-mono text-xs">
+<!-- Timeline Slot 1 -->
+<div class="p-3 rounded-lg bg-primary/10 space-y-1">
+<div class="flex items-center justify-between font-bold text-on-surface">
+<span class="flex items-center gap-1.5">
+<span class="h-2 w-2 rounded-full bg-primary"></span>
+                Current – +08:00h
+              </span>
+<span class="text-primary font-bold">WO-8924 Boroscope</span>
+</div>
+<p class="text-secondary font-sans text-xs">M. Vance (Lead) &amp; B. Rossi on bay floor</p>
+</div>
+<!-- Timeline Slot 2 -->
+<div class="p-3 rounded-lg bg-surface-container space-y-1">
+<div class="flex items-center justify-between text-secondary">
+<span>+08:00h – +24:00h</span>
+<span class="font-semibold text-on-surface">Post-Check Run-Up</span>
+</div>
+<p class="text-secondary font-sans text-xs">Acoustic envelope &amp; thermocouple thermal cycle testing</p>
+</div>
+<!-- Timeline Slot 3 -->
+<div class="p-3 rounded-lg bg-surface-container space-y-1">
+<div class="flex items-center justify-between text-secondary">
+<span>+24:00h – +48:00h</span>
+<span class="font-semibold text-on-surface">Cell Open / Reserved</span>
+</div>
+<p class="text-secondary font-sans text-xs">Secondary stand available for APU balance testing</p>
+</div>
+</div>
+<!-- Standby Crew Roster -->
+<div class="pt-2">
+<p class="text-xs font-semibold text-on-surface uppercase tracking-wide font-mono mb-2">Shift Technicians</p>
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 rounded-full bg-primary-container text-on-primary-container font-mono text-xs font-bold flex items-center justify-center" title="M. Vance - Lead">MV</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-high text-on-surface font-mono text-xs font-bold flex items-center justify-center" title="B. Rossi - NDT Specialist">BR</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-high text-on-surface font-mono text-xs font-bold flex items-center justify-center" title="K. Patel - Propulsion">KP</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-high text-on-surface font-mono text-xs font-bold flex items-center justify-center" title="J. Thorne - Avionics">JT</div>
+<span class="text-xs text-secondary font-mono ml-2">+2 Standby</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Maintenance Queue & Operational History Table -->
+<div class="rounded-xl bg-surface-container-low p-6 shadow-sm space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<h3 class="text-lg font-headline font-bold text-on-surface">Work Order Queue &amp; Cell Event Ledger</h3>
+<p class="text-xs text-secondary">Historical logs and upcoming dispatches synchronized with CFM-56 fleet telemetry</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-xs font-medium text-secondary hover:text-on-surface transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">filter_list</span> Filter
+        </button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-xs font-medium text-secondary hover:text-on-surface transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">download</span> Export CSV
+        </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto -mx-6 px-6">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="bg-surface-container text-secondary uppercase font-mono tracking-wider">
+<th class="py-3.5 px-4 rounded-l-lg">Order ID</th>
+<th class="py-3.5 px-4">Maintenance Task</th>
+<th class="py-3.5 px-4">Assigned Personnel</th>
+<th class="py-3.5 px-4">Cell Location</th>
+<th class="py-3.5 px-4">Lifecycle State</th>
+<th class="py-3.5 px-4 rounded-r-lg text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 space-y-2">
+<!-- Row 1 (High Priority In-Flight) -->
+<tr class="bg-surface-container/50 hover:bg-surface-container transition-colors">
+<td class="py-4 px-4 font-mono font-bold text-primary">#WO-8924</td>
+<td class="py-4 px-4">
+<div class="font-semibold text-on-surface">HPT Stage 1 Boroscope Inspection</div>
+<div class="text-[11px] text-tertiary font-mono">Linked to T50 temp delta (+48.6°R)</div>
+</td>
+<td class="py-4 px-4 text-on-surface">
+<span class="font-semibold">M. Vance</span>
+<span class="text-secondary text-[11px] block">Lead A&amp;P</span>
+</td>
+<td class="py-4 px-4 font-mono text-secondary">Bay B-4</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-semibold font-mono text-[10px]">
+<span class="h-1.5 w-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                PRIORITY DISPATCHED
+              </span>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="p-1 rounded-lg hover:bg-surface-container-high text-secondary hover:text-on-surface transition-colors" title="View Inspection File">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 (Avionics in progress) -->
+<tr class="bg-surface-container/30 hover:bg-surface-container transition-colors">
+<td class="py-4 px-4 font-mono font-bold text-on-surface">#WO-8911</td>
+<td class="py-4 px-4">
+<div class="font-semibold text-on-surface">Magnetic Chip Detector Cleanse &amp; Spectrometry</div>
+<div class="text-[11px] text-secondary font-mono">Scavenge line sensor check</div>
+</td>
+<td class="py-4 px-4 text-on-surface">
+<span class="font-semibold">Avionics Crew</span>
+<span class="text-secondary text-[11px] block">Specialist Sub-Team</span>
+</td>
+<td class="py-4 px-4 font-mono text-secondary">Bay B-4</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-semibold font-mono text-[10px]">
+<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                90% COMPLETED
+              </span>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="p-1 rounded-lg hover:bg-surface-container-high text-secondary hover:text-on-surface transition-colors" title="View Lab Report">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 (Completed) -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-4 px-4 font-mono text-secondary">#WO-8870</td>
+<td class="py-4 px-4">
+<div class="font-medium text-on-surface">Combustor Static Pressure Line Purge</div>
+<div class="text-[11px] text-secondary font-mono">Differential transducer zeroed</div>
+</td>
+<td class="py-4 px-4 text-secondary">Tech K. Patel</td>
+<td class="py-4 px-4 font-mono text-secondary">Bay B-4</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-primary font-mono text-[11px] font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span> Cycle 92 Done
+              </span>
+</td>
+<td class="py-4 px-4 text-right">
+<span class="text-[11px] font-mono text-secondary">Nominal</span>
+</td>
+</tr>
+<!-- Row 4 (Completed) -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-4 px-4 font-mono text-secondary">#WO-8845</td>
+<td class="py-4 px-4">
+<div class="font-medium text-on-surface">LPC Outlet Thermocouple Array Calibration</div>
+<div class="text-[11px] text-secondary font-mono">8-point resistance bridge audit</div>
+</td>
+<td class="py-4 px-4 text-secondary">Tech J. Thorne</td>
+<td class="py-4 px-4 font-mono text-secondary">Bay B-4</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-primary font-mono text-[11px] font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span> Cycle 78 Done
+              </span>
+</td>
+<td class="py-4 px-4 text-right">
+<span class="text-[11px] font-mono text-secondary">Nominal</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div></main>
+<!-- DOCKED RIGHT SIDE DRAWER: RELIABILITY COPILOT -->
+
+</div>
+<!-- DISPATCH NOTIFICATION TOAST -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 px-4 py-3 rounded-2xl bg-surface border border-primary shadow-lg max-w-sm" id="dispatchToast">
+<div class="w-8 h-8 rounded-xl bg-primary-container text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</div>
+<div class="text-xs">
+<h5 class="font-bold text-on-surface font-headline">Work Order WO-8924 Dispatched</h5>
+<p class="text-secondary">Assigned to Lead Tech M. Vance for Cell B-4.</p>
+</div>
+<button class="text-secondary hover:text-on-surface ml-auto" id="dismissToast">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- SCRIPT FOR PLAYBACK & SYNC -->
+<script>
+    (function() {
+      let currentCycle = 108;
+      const maxCycle = 200;
+      let isPlaying = false;
+      let playTimer = null;
+
+      const cycleIndicator = document.getElementById('cycleIndicator');
+      const rulDisplay = document.getElementById('rulDisplay');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const playIcon = document.getElementById('playIcon');
+      const stepBackBtn = document.getElementById('stepBackBtn');
+      const stepFwdBtn = document.getElementById('stepFwdBtn');
+      const syncLine = document.getElementById('syncLine');
+      const syncPoint = document.getElementById('syncPoint');
+      const chartTooltip = document.getElementById('chartTooltip');
+
+      const dispatchBtn = document.getElementById('dispatchWorkOrderBtn');
+      const dispatchToast = document.getElementById('dispatchToast');
+      const dismissToast = document.getElementById('dismissToast');
+
+      function updateCycle(cycle) {
+        currentCycle = Math.max(1, Math.min(maxCycle, cycle));
+        if (cycleIndicator) cycleIndicator.innerText = currentCycle;
+
+        // Approximate RUL based on cycle: 200 - cycle minus wear acceleration past cycle 95
+        let calculatedRul = Math.max(0, 200 - currentCycle);
+        if (currentCycle > 95) {
+          calculatedRul = Math.max(0, Math.round(200 - currentCycle - (currentCycle - 95) * 0.2));
+        }
+        if (rulDisplay) rulDisplay.innerText = calculatedRul;
+
+        // Coordinate mapped to SVG 800px width viewBox
+        const svgX = (currentCycle / maxCycle) * 800;
+        if (syncLine) {
+          syncLine.setAttribute('x1', svgX);
+          syncLine.setAttribute('x2', svgX);
+        }
+        if (syncPoint) {
+          syncPoint.setAttribute('cx', svgX);
+          // calculate rough curve height
+          const curveY = 20 + (currentCycle / maxCycle) * 155;
+          syncPoint.setAttribute('cy', curveY);
+        }
+
+        const percentage = (currentCycle / maxCycle) * 100;
+        if (chartTooltip) {
+          chartTooltip.style.left = percentage + '%';
+          chartTooltip.innerHTML = `
+            <span class="text-secondary">Cycle: </span>
+            <span class="font-bold text-on-surface">${currentCycle}</span>
+            <div class="text-primary font-semibold">${calculatedRul} Cycles RUL</div>
+          `;
+        }
+      }
+
+      if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', () => {
+          isPlaying = !isPlaying;
+          if (isPlaying) {
+            playIcon.innerText = 'pause';
+            playTimer = setInterval(() => {
+              if (currentCycle >= maxCycle) currentCycle = 1;
+              else currentCycle += 1;
+              updateCycle(currentCycle);
+            }, 120);
+          } else {
+            playIcon.innerText = 'play_arrow';
+            clearInterval(playTimer);
+          }
+        });
+      }
+
+      if (stepBackBtn) stepBackBtn.addEventListener('click', () => updateCycle(currentCycle - 5));
+      if (stepFwdBtn) stepFwdBtn.addEventListener('click', () => updateCycle(currentCycle + 5));
+
+      if (dispatchBtn && dispatchToast) {
+        dispatchBtn.addEventListener('click', () => {
+          dispatchToast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+          dispatchToast.classList.add('translate-y-0', 'opacity-100');
+          setTimeout(() => {
+            dispatchToast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            dispatchToast.classList.remove('translate-y-0', 'opacity-100');
+          }, 4500);
+        });
+      }
+
+      if (dismissToast && dispatchToast) {
+        dismissToast.addEventListener('click', () => {
+          dispatchToast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        });
+      }
+
+      updateCycle(108);
+    })();
+  </script>
+
+
+<button aria-label="Open Reliability Copilot" class="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-primary hover:bg-[#3d694a] text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105 border border-white/20 cursor-pointer" id="floatingCopilotBtn" title="Open Reliability Copilot"><svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></button></body></html>

@@ -40,7 +40,6 @@ from sklearn.preprocessing import MinMaxScaler
 `;
 
   const handleCopy = () => {
-    // Fetch actual file or copy script
     fetch('/app.py')
       .then((res) => (res.ok ? res.text() : pythonCode))
       .catch(() => pythonCode)
@@ -69,44 +68,46 @@ from sklearn.preprocessing import MinMaxScaler
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
-      <div className="bg-gradient-to-b from-[#1b263b] to-[#141d2c] border border-slate-700/60 rounded-xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#2e3230]/40 backdrop-blur-sm font-body">
+      <div className="bg-surface border border-surface-container-highest rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden text-on-surface">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700/60 bg-gradient-to-r from-[#172235] to-[#1b273d]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-container-highest bg-surface">
           <div className="flex items-center gap-2.5">
-            <Terminal className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-sm font-bold font-mono text-white uppercase tracking-wider">
+            <div className="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+              <Terminal className="w-4 h-4 text-primary" />
+            </div>
+            <h3 className="text-sm font-headline font-semibold text-on-surface">
               Self-Contained Executable · app.py (Streamlit + PyTorch)
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-slate-700/50 transition-colors"
+            className="p-1.5 text-secondary hover:text-on-surface rounded-xl hover:bg-surface-container transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Instructions banner */}
-        <div className="bg-[#121927] px-6 py-3 border-b border-slate-700/60 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-slate-200">
+        <div className="bg-surface-container-low px-6 py-3 border-b border-surface-container-highest flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-on-surface">
           <div>
-            <span className="text-slate-400">Run locally: </span>
-            <code className="text-cyan-300 bg-[#1b263b] px-2 py-0.5 rounded border border-slate-600/50">
-              pip install streamlit torch plotly pandas numpy scikit-learn && streamlit run app.py
+            <span className="text-secondary">Run locally: </span>
+            <code className="text-primary bg-surface px-2 py-0.5 rounded border border-surface-container-highest">
+              pip install streamlit torch plotly pandas numpy scikit-learn &amp;&amp; streamlit run app.py
             </code>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1 bg-[#223048] hover:bg-[#2c3d5a] text-slate-100 rounded-lg text-xs transition-colors border border-slate-600/60 shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-container-high text-on-surface rounded-xl text-xs font-semibold transition-colors border border-surface-container-highest shadow-xs"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied' : 'Copy app.py'}</span>
             </button>
             <button
               onClick={handleDownload}
-              className="flex items-center gap-1.5 px-3.5 py-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold rounded-lg text-xs transition-colors shadow-md"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primary/90 text-on-primary font-semibold rounded-xl text-xs transition-colors shadow-sm"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download File</span>
@@ -115,7 +116,7 @@ from sklearn.preprocessing import MinMaxScaler
         </div>
 
         {/* Code Content */}
-        <div className="p-6 overflow-y-auto flex-1 font-mono text-xs text-slate-200 bg-[#0e1624]">
+        <div className="p-6 overflow-y-auto flex-1 font-mono text-xs text-on-surface bg-surface-container-lowest">
           <pre className="whitespace-pre-wrap leading-relaxed select-all">
 {`# Setup: pip install streamlit torch plotly pandas numpy scikit-learn
 # Run: streamlit run app.py
@@ -135,11 +136,11 @@ from plotly.subplots import make_subplots
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-[#1e293b] flex items-center justify-between text-xs text-slate-500 font-mono">
+        <div className="px-6 py-3 border-t border-surface-container-highest flex items-center justify-between text-xs text-secondary font-mono bg-surface">
           <span>File size: ~23 KB · Single standalone file</span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded transition-colors"
+            className="px-4 py-1.5 bg-surface-container hover:bg-surface-container-high text-on-surface rounded-xl font-semibold transition-colors border border-surface-container-highest"
           >
             Close
           </button>

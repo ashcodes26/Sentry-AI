@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+__pycache__/
+*.pyc
+.hyperframes/
+brag-output-2026*/
+brag-output-transformer/

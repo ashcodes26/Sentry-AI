@@ -327,24 +327,24 @@ export function getAssetFinancialStatus(
 ): FinancialImpact {
   const netSavings = asset.unplannedCost - asset.scheduledCost;
   let status: EngineStatus = 'HEALTHY';
-  let statusColor = '#10b981';
+  let statusColor = '#4a7c59';
   let avoidedLoss = 0;
 
   if (activePoint.RUL_pred <= 10) {
     status = 'CRITICAL IMMINENT FAILURE';
-    statusColor = '#f43f5e';
+    statusColor = '#b83230';
     avoidedLoss = netSavings;
   } else if (activePoint.RUL_pred <= 35) {
     status = 'SCHEDULE MAINTENANCE';
-    statusColor = '#f59e0b';
+    statusColor = '#8a6627';
     avoidedLoss = netSavings;
   } else if (activePoint.health_index_mse > asset.threshold3Sigma) {
     status = 'DRIFT DETECTED';
-    statusColor = '#3b82f6';
+    statusColor = '#8a6627';
     avoidedLoss = netSavings;
   } else {
     status = 'HEALTHY';
-    statusColor = '#10b981';
+    statusColor = '#4a7c59';
     avoidedLoss = 0;
   }
 

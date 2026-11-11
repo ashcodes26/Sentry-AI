@@ -10,6 +10,7 @@ interface CleanTimelineProps {
   onTogglePlay: () => void;
   speed: number;
   onSpeedChange: (speed: number) => void;
+  onAnomalyIntercept?: () => void;
 }
 
 export const CleanTimeline: React.FC<CleanTimelineProps> = ({
@@ -20,14 +21,24 @@ export const CleanTimeline: React.FC<CleanTimelineProps> = ({
   onTogglePlay,
   speed,
   onSpeedChange,
+  onAnomalyIntercept,
 }) => {
   useEffect(() => {
     if (!isPlaying) return;
     const interval = setInterval(() => {
+      if (currentCycle < asset.kneePoint && currentCycle + speed >= asset.kneePoint) {
+        onCycleChange(asset.kneePoint);
+        onTogglePlay();
+        if (onAnomalyIntercept) {
+          onAnomalyIntercept();
+        }
+        return;
+      }
+
       onCycleChange(Math.min(asset.maxLife, currentCycle + speed));
     }, 120);
     return () => clearInterval(interval);
-  }, [isPlaying, currentCycle, asset.maxLife, speed, onCycleChange]);
+  }, [isPlaying, currentCycle, asset.maxLife, asset.kneePoint, speed, onCycleChange, onTogglePlay, onAnomalyIntercept]);
 
   useEffect(() => {
     if (currentCycle >= asset.maxLife && isPlaying) {
@@ -35,121 +46,99 @@ export const CleanTimeline: React.FC<CleanTimelineProps> = ({
     }
   }, [currentCycle, asset.maxLife, isPlaying, onTogglePlay]);
 
+  const kneePointPercent = Math.max(0, Math.min(100, ((asset.kneePoint - 1) / (asset.maxLife - 1)) * 100));
+
   return (
-    <div className="bg-gradient-to-b from-[#1b2537]/90 to-[#151f30]/90 backdrop-blur-sm border border-slate-700/60 rounded-xl px-5 py-3.5 shadow-lg shadow-black/10">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Playback & Step Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onTogglePlay}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-              isPlaying
-                ? 'bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md shadow-blue-600/25'
-            }`}
-          >
-            {isPlaying ? (
-              <>
-                <Pause className="w-3.5 h-3.5 fill-current" />
-                <span>Pause</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Simulate</span>
-              </>
-            )}
-          </button>
+    <div className="bg-surface rounded-2xl p-4 sm:p-5 border border-surface-container-highest shadow-sm space-y-3">
+      {/* Sub-banner: Playback Bar directly from Stitch */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-low rounded-xl p-3 border border-surface-container-highest/60">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface text-xs font-semibold text-secondary shadow-sm">
+            <span className="material-symbols-outlined text-primary text-[15px]">verified</span>
+            Live Stream Verified
+          </span>
+          <span className="text-xs text-on-surface-variant font-mono">
+            ID: {asset.id.toUpperCase()}-SN84920
+          </span>
+        </div>
 
-          <button
-            onClick={() => onCycleChange(Math.max(1, currentCycle - 1))}
-            disabled={currentCycle <= 1}
-            title="Step Back"
-            className="p-1.5 text-slate-300 hover:text-white bg-[#223048] hover:bg-[#2b3d5b] border border-slate-600/60 rounded-lg disabled:opacity-30 transition-colors shadow-sm"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-          </button>
+        {/* Scrubber Playback Controls */}
+        <div className="flex items-center gap-2.5 text-xs">
+          <div className="flex items-center bg-surface-container rounded-lg p-0.5 border border-surface-container-highest">
+            <button
+              onClick={onTogglePlay}
+              className={`w-7 h-7 rounded hover:bg-surface flex items-center justify-center transition-colors ${
+                isPlaying ? 'text-tertiary bg-surface font-bold' : 'text-on-surface'
+              }`}
+              title={isPlaying ? 'Pause' : 'Play Simulation'}
+            >
+              {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+            </button>
+            <button
+              onClick={() => onCycleChange(Math.max(1, currentCycle - 5))}
+              className="w-6 h-7 rounded hover:bg-surface flex items-center justify-center text-secondary hover:text-on-surface transition-colors"
+              title="Step -5"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => onCycleChange(Math.min(asset.maxLife, currentCycle + 5))}
+              className="w-6 h-7 rounded hover:bg-surface flex items-center justify-center text-secondary hover:text-on-surface transition-colors"
+              title="Step +5"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => onCycleChange(1)}
+              className="w-6 h-7 rounded hover:bg-surface flex items-center justify-center text-secondary hover:text-on-surface transition-colors"
+              title="Reset"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
-          <button
-            onClick={() => onCycleChange(Math.min(asset.maxLife, currentCycle + 1))}
-            disabled={currentCycle >= asset.maxLife}
-            title="Step Forward"
-            className="p-1.5 text-slate-300 hover:text-white bg-[#223048] hover:bg-[#2b3d5b] border border-slate-600/60 rounded-lg disabled:opacity-30 transition-colors shadow-sm"
-          >
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-1.5 bg-surface-container px-3 py-1 rounded-lg border border-surface-container-highest font-mono">
+            <span className="text-secondary text-[11px] uppercase">{asset.timeUnit}</span>
+            <span className="font-bold text-on-surface">{currentCycle}</span>
+            <span className="text-secondary text-[11px]">/ {asset.maxLife}</span>
+          </div>
 
-          <button
-            onClick={() => onCycleChange(1)}
-            title="Reset to Start"
-            className="p-1.5 text-slate-300 hover:text-white bg-[#223048] hover:bg-[#2b3d5b] border border-slate-600/60 rounded-lg transition-colors shadow-sm"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
+          <span className="text-xs text-tertiary font-medium hidden md:inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+            Knee point at {asset.timeUnit.slice(0, -1)} {asset.kneePoint}
+          </span>
+        </div>
+      </div>
 
-          {/* Speed Toggle */}
-          <div className="flex items-center gap-1 bg-[#141d2c] p-0.5 rounded-lg border border-slate-700/60 shadow-inner ml-1">
-            {[1, 2, 5].map((s) => (
-              <button
-                key={s}
-                onClick={() => onSpeedChange(s)}
-                className={`px-2 py-0.5 text-[11px] font-mono rounded transition-colors ${
-                  speed === s ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                {s}x
-              </button>
-            ))}
+      {/* Scrub Bar Slider */}
+      <div className="relative pt-2 pb-1">
+        <div className="relative w-full">
+          <input
+            type="range"
+            min={1}
+            max={asset.maxLife}
+            value={currentCycle}
+            onChange={(e) => onCycleChange(Number(e.target.value))}
+            className="w-full h-2.5 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
+          />
+
+          {/* Knee point marker indicator on track */}
+          <div
+            className="absolute top-0 transform -translate-x-1/2 pointer-events-none flex flex-col items-center"
+            style={{ left: `${kneePointPercent}%` }}
+          >
+            <div className="w-1.5 h-3.5 bg-tertiary rounded-sm shadow-sm" />
           </div>
         </div>
 
-        {/* Timeline Slider with Life Markers */}
-        <div className="flex-1 max-w-xl flex flex-col justify-center">
-          <div className="flex items-center justify-between text-[11px] text-slate-300 mb-1">
-            <span>Start (1)</span>
-            <span className="text-blue-400 font-medium">Degradation Knee: {asset.kneePoint} {asset.timeUnit}</span>
-            <span>Max: {asset.maxLife} {asset.timeUnit}</span>
-          </div>
-
-          <div className="relative flex items-center">
-            <input
-              type="range"
-              min={1}
-              max={asset.maxLife}
-              value={currentCycle}
-              onChange={(e) => onCycleChange(Number(e.target.value))}
-              className="w-full h-2 bg-gradient-to-r from-emerald-500/20 via-amber-500/20 to-rose-500/30 bg-slate-700/70 rounded-lg appearance-none cursor-pointer accent-blue-500"
-            />
-          </div>
-        </div>
-
-        {/* Quick Jump Buttons */}
-        <div className="hidden lg:flex items-center gap-1.5 text-xs">
-          <span className="text-[11px] text-slate-400 mr-1 font-medium">Presets:</span>
-          <button
-            onClick={() => onCycleChange(15)}
-            className="px-2.5 py-1 bg-[#223048] hover:bg-[#2b3d5b] border border-slate-600/60 rounded-md text-slate-200 hover:text-white text-xs transition-colors shadow-sm"
-          >
-            Healthy
-          </button>
-          <button
-            onClick={() => onCycleChange(asset.kneePoint + 5)}
-            className="px-2.5 py-1 bg-[#223048] hover:bg-[#2b3d5b] border border-blue-500/40 rounded-md text-blue-300 hover:text-blue-100 text-xs transition-colors shadow-sm"
-          >
-            Knee-Point
-          </button>
-          <button
-            onClick={() => onCycleChange(asset.maxLife - 25)}
-            className="px-2.5 py-1 bg-[#223048] hover:bg-[#2b3d5b] border border-amber-500/40 rounded-md text-amber-300 hover:text-amber-100 text-xs transition-colors shadow-sm"
-          >
-            Service
-          </button>
-          <button
-            onClick={() => onCycleChange(asset.maxLife - 3)}
-            className="px-2.5 py-1 bg-[#223048] hover:bg-[#2b3d5b] border border-rose-500/40 rounded-md text-rose-300 hover:text-rose-100 text-xs transition-colors shadow-sm"
-          >
-            Failure
-          </button>
+        <div className="flex justify-between items-center text-[11px] text-secondary font-mono mt-1.5 px-1">
+          <span>Nominal Baseline ({asset.timeUnit} 1)</span>
+          <span className="text-tertiary font-semibold">
+            Onset Knee Point ({asset.kneePoint} {asset.timeUnit})
+          </span>
+          <span className="text-error font-semibold">
+            Max Lifespan ({asset.maxLife} {asset.timeUnit})
+          </span>
         </div>
       </div>
     </div>

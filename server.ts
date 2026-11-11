@@ -267,6 +267,96 @@ Respond ONLY with valid JSON in this exact structure:
   }
 });
 
+// System Status & Health Diagnostics Endpoint
+app.get('/api/system/status', async (_req, res) => {
+  let mlOnline = false;
+  let mlDetails = null;
+
+  try {
+    const mlResponse = await fetch('http://localhost:8000/health', {
+      signal: AbortSignal.timeout(1500),
+    });
+    if (mlResponse.ok) {
+      mlDetails = await mlResponse.json();
+      mlOnline = true;
+    }
+  } catch {
+    mlOnline = false;
+  }
+
+  const hasValidKey = Boolean(
+    apiKey &&
+    apiKey !== 'MY_GEMINI_API_KEY' &&
+    !apiKey.startsWith('MY_') &&
+    apiKey.trim().length > 20
+  );
+
+  return res.json({
+    mlEngine: {
+      online: mlOnline,
+      target: 'http://localhost:8000',
+      details: mlDetails,
+    },
+    copilotAi: {
+      configured: hasValidKey,
+      model: 'gemini-2.5-flash',
+      fallback: 'deterministic-thermodynamics',
+    },
+    version: '2.0.0-production',
+  });
+});
+
+// PyTorch ML Microservice Proxy with Resilient Circuit Breaker
+app.post('/api/predict/anomaly', async (req, res) => {
+  try {
+    const mlRes = await fetch('http://localhost:8000/predict/anomaly', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body),
+      signal: AbortSignal.timeout(2500),
+    });
+
+    if (!mlRes.ok) {
+      throw new Error(`ML service returned status ${mlRes.status}`);
+    }
+
+    const data = await mlRes.json();
+    return res.json({ ...data, source: 'pytorch_ml_engine' });
+  } catch (err: any) {
+    return res.json({
+      fallback: true,
+      source: 'physics_simulation',
+      message: 'Python ML service offline, serving calibrated physics fallback',
+      error: err.message,
+    });
+  }
+});
+
+app.post('/api/predict/rul', async (req, res) => {
+  try {
+    const mlRes = await fetch('http://localhost:8000/predict/rul', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body),
+      signal: AbortSignal.timeout(2500),
+    });
+
+    if (!mlRes.ok) {
+      throw new Error(`ML service returned status ${mlRes.status}`);
+    }
+
+    const data = await mlRes.json();
+    return res.json({ ...data, source: 'pytorch_ml_engine' });
+  } catch (err: any) {
+    return res.json({
+      fallback: true,
+      source: 'physics_simulation',
+      message: 'Python ML service offline, serving calibrated physics fallback',
+      error: err.message,
+    });
+  }
+});
+
 // Mount Vite middleware in dev or static files in production
 async function startServer() {
   const isProd = process.env.NODE_ENV === 'production';

@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>SENTRY IQ — Industrial Predictive Maintenance Platform (Transformer Walkthrough)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..800;1,7..72,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,300..800;1,6..12,400&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background-color: #f5f1ea;
+        color: #2e3230;
+        font-family: "Nunito Sans", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .font-headline {
+        font-family: "Literata", serif;
+      }
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Base layout styling */
+      .stage-scene {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f5f1ea;
+        overflow: hidden;
+      }
+
+      /* Technical engineering grid background */
+      .grid-bg {
+        background-image: 
+          linear-gradient(to right, rgba(107, 99, 88, 0.07) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(107, 99, 88, 0.07) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+
+      /* Deterministic container & grid layouts */
+      .scene-container {
+        width: 1560px;
+        max-width: 1560px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .grid-6 {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 14px;
+      }
+
+      .grid-12 {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 20px;
+      }
+
+      .col-7 {
+        grid-column: span 7;
+      }
+      .col-5 {
+        grid-column: span 5;
+      }
+      .col-8 {
+        grid-column: span 8;
+      }
+      .col-4 {
+        grid-column: span 4;
+      }
+
+      /* Terra Calm Cards */
+      .terra-card {
+        background-color: #faf6f0;
+        border: 1px solid #e4e0d8;
+        border-radius: 20px;
+        box-shadow: 0 4px 24px -2px rgba(46, 50, 48, 0.06);
+      }
+
+      .terra-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 9999px;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .pulse-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #4a7c59;
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.25);
+      }
+
+      .pulse-dot-red {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #b83230;
+        box-shadow: 0 0 0 4px rgba(184, 50, 48, 0.3);
+      }
+
+      .glow-green {
+        box-shadow: 0 0 30px rgba(74, 124, 89, 0.2);
+      }
+      .glow-red {
+        box-shadow: 0 0 35px rgba(184, 50, 48, 0.25);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="40"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Audio BGM Track (40s full duration with 2s fade out) -->
+      <audio
+        id="a-roll-audio"
+        src="happy-beats-business-moves-vol-10-by-ende-dot-app.mp3"
+        data-start="0"
+        data-duration="40"
+        data-track-index="1"
+        data-volume="0.85"
+        data-fade-out="2.0"
+      ></audio>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 1: THE HIGH-VOLTAGE HOOK & RISK (0.0s - 5.46s) -->
+      <!-- ============================================================ -->
+      <div id="scene-1" class="stage-scene grid-bg clip" data-start="0" data-duration="5.46" data-hold="true">
+        <!-- Floating HUD Brackets -->
+        <div class="absolute inset-16 border border-[#6b6358]/20 rounded-3xl pointer-events-none" data-layout-ignore="true" style="position: absolute; inset: 64px;">
+          <div style="position: absolute; top: 0; left: 0; width: 40px; height: 40px; border-top: 2px solid #4a7c59; border-left: 2px solid #4a7c59;"></div>
+          <div style="position: absolute; top: 0; right: 0; width: 40px; height: 40px; border-top: 2px solid #4a7c59; border-right: 2px solid #4a7c59;"></div>
+          <div style="position: absolute; bottom: 0; left: 0; width: 40px; height: 40px; border-bottom: 2px solid #4a7c59; border-left: 2px solid #4a7c59;"></div>
+          <div style="position: absolute; bottom: 0; right: 0; width: 40px; height: 40px; border-bottom: 2px solid #4a7c59; border-right: 2px solid #4a7c59;"></div>
+        </div>
+
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; padding: 0 32px; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+          <!-- Top Tag Badge - Fully visible on frame 0 for postable thumbnail -->
+          <div id="s1-badge" class="terra-pill" style="background-color: #faf6f0; border: 1px solid #e4e0d8; color: #4a7c59; margin-bottom: 32px;">
+            <span class="pulse-dot"></span>
+            <span class="font-mono" style="font-size: 15px;" data-layout-ignore="true">HIGH-VOLTAGE GRID DIGITAL TWIN INTELLIGENCE</span>
+          </div>
+
+          <!-- Bold Hook Headline - Fully visible on frame 0 -->
+          <h1 id="s1-title" class="font-headline" style="font-size: 64px; font-weight: 700; color: #2e3230; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 24px;">
+            A single 230kV transformer blowout costs <span style="color: #b83230; text-decoration: underline; text-decoration-color: rgba(184, 50, 48, 0.4); text-decoration-thickness: 4px; text-underline-offset: 8px;">$450,000</span>.
+          </h1>
+
+          <p id="s1-subtitle" class="font-headline" style="font-size: 32px; font-weight: 500; color: #4a7c59; letter-spacing: -0.01em; max-width: 900px; margin-bottom: 32px;">
+            SENTRY intercepts dielectric breakdown weeks before catastrophic grid failure.
+          </p>
+
+          <!-- Asset Pill Badge -->
+          <div id="s1-icon" style="display: flex; align-items: center; gap: 12px; padding: 14px 32px; border-radius: 16px; background-color: #faf6f0; border: 1px solid #e4e0d8; font-family: 'JetBrains Mono', monospace; font-size: 17px; color: #5e5548;" data-layout-ignore="true">
+            <span class="material-symbols-outlined" style="color: #8a6627; font-size: 26px;">electric_bolt</span>
+            <span>Substation Transformer TX-400 · North Substation 230kV Bay 3 · 400MVA Twin</span>
+          </div>
+
+          <!-- Schematic Waveform SVG -->
+          <div id="s1-wave" style="margin-top: 32px; width: 500px; height: 48px; display: flex; align-items: center; justify-content: center;" data-layout-ignore="true">
+            <svg style="width: 100%; height: 100%;" viewBox="0 0 500 40" fill="none">
+              <path id="s1-wave-path" d="M0 20 Q 62.5 0, 125 20 T 250 20 T 375 20 T 500 20" stroke="#4a7c59" stroke-width="3" stroke-dasharray="500" stroke-dashoffset="0" />
+              <path d="M0 20 Q 62.5 35, 125 20 T 250 20 T 375 20 T 500 20" stroke="#8a6627" stroke-width="1.5" stroke-dasharray="6 4" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 2: LIVE DIGITAL TWIN & 100Hz TELEMETRY (5.46s - 13.09s) -->
+      <!-- ============================================================ -->
+      <div id="scene-2" class="stage-scene grid-bg clip" data-start="5.46" data-duration="7.63" style="opacity: 0;" data-hold="true">
+        <div class="scene-container">
+          <!-- Top HUD Bar -->
+          <div id="s2-topbar" class="terra-card" style="padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div style="width: 44px; height: 44px; border-radius: 14px; background-color: #4a7c59; color: white; display: flex; align-items: center; justify-content: center;">
+                <span class="material-symbols-outlined" style="font-size: 24px;">electric_bolt</span>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span class="font-headline" style="font-size: 28px; font-weight: 700; color: #2e3230;">Sentry IQ</span>
+                  <span style="padding: 4px 10px; border-radius: 9999px; background-color: #d7e8db; color: #173b22; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-transform: uppercase;" data-layout-ignore="true">
+                    CRITICAL ASSET TWIN
+                  </span>
+                </div>
+                <p style="font-size: 12px; color: #5e5548; font-family: 'JetBrains Mono', monospace; margin-top: 2px;" data-layout-ignore="true">
+                  Transformer TX-400 · North Substation 230kV / 69kV Bay 3 · S/N: TX-400-881
+                </p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 16px;" data-layout-ignore="true">
+              <div style="display: flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 12px; background-color: #f0ece4; border: 1px solid #e4e0d8; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #2e3230;">
+                <span class="pulse-dot"></span>
+                <span style="color: #5e5548;">Live Telemetry:</span>
+                <span style="font-weight: 700; color: #4a7c59;">100Hz STREAM ACTIVE</span>
+              </div>
+              <div style="padding: 6px 16px; border-radius: 12px; background-color: #faf6f0; border: 1px solid #e4e0d8; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: #2e3230;">
+                Baseline: Day 42 (Nominal)
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Vitality & Core Stats Card -->
+          <div id="s2-hero" class="terra-card" style="padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; gap: 32px;">
+            <!-- Radial Vitality Dial -->
+            <div style="display: flex; align-items: center; gap: 24px;">
+              <div style="position: relative; width: 120px; height: 120px; flex-shrink: 0;">
+                <svg style="width: 100%; height: 100%; transform: rotate(-90deg);" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="#eae6de" stroke-width="8" />
+                  <circle
+                    id="s2-vitality-ring"
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    fill="none"
+                    stroke="#4a7c59"
+                    stroke-width="8"
+                    stroke-dasharray="263.89"
+                    stroke-dashoffset="0"
+                  />
+                </svg>
+                <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                  <span id="s2-vitality-val" class="font-headline" style="font-size: 26px; font-weight: 700; color: #2e3230;">99.4%</span>
+                  <span style="font-size: 10px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; color: #5e5548;" data-layout-ignore="true">Health</span>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #4a7c59;"></span>
+                  <span class="font-headline" style="font-size: 26px; font-weight: 700; color: #2e3230;">All 6 Dielectric Channels Nominal</span>
+                </div>
+                <p style="font-size: 14px; color: #5e5548; max-width: 580px; line-height: 1.4;" data-layout-ignore="true">
+                  Deep learning autoencoders continuous cross-correlation monitors top-oil heat, dissolved gases, and moisture dynamics.
+                </p>
+              </div>
+            </div>
+
+            <!-- Quick Metrics Grid -->
+            <div style="display: flex; align-items: center; gap: 16px;" data-layout-ignore="true">
+              <div style="background-color: #f0ece4; padding: 12px 18px; border-radius: 14px; border: 1px solid #e4e0d8; text-align: center; min-width: 140px;">
+                <span style="display: block; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e5548; text-transform: uppercase; margin-bottom: 2px;">Autoencoder MSE</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #4a7c59;">0.0028</span>
+                <span style="display: block; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548; margin-top: 2px;">Threshold 0.0082</span>
+              </div>
+
+              <div style="background-color: #f0ece4; padding: 12px 18px; border-radius: 14px; border: 1px solid #e4e0d8; text-align: center; min-width: 140px;">
+                <span style="display: block; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e5548; text-transform: uppercase; margin-bottom: 2px;">Projected RUL</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #2e3230;">105 Days</span>
+                <span style="display: block; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #4a7c59; margin-top: 2px;">Healthy Runway</span>
+              </div>
+
+              <div style="background-color: #f0ece4; padding: 12px 18px; border-radius: 14px; border: 1px solid #e4e0d8; text-align: center; min-width: 140px;">
+                <span style="display: block; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e5548; text-transform: uppercase; margin-bottom: 2px;">Breakdown Margin</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #4a7c59;">66.5 kV</span>
+                <span style="display: block; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548; margin-top: 2px;">Baseline 68.0 kV</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6-Sensor Telemetry Grid -->
+          <div id="s2-sensors" class="grid-6" data-layout-ignore="true">
+            <!-- Sensor 1: Top-Oil Temp -->
+            <div class="terra-card" style="padding: 14px 18px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-size: 12px; font-weight: 600; color: #2e3230;">Top-Oil Temp</span>
+              <div style="margin: 6px 0;">
+                <span class="font-mono" style="font-size: 20px; font-weight: 700; color: #2e3230;">61.2 <span style="font-size: 12px; font-weight: 400; color: #5e5548;">°C</span></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">
+                <span>Base: 58°C</span>
+                <span style="color: #4a7c59; font-weight: 700;">NOMINAL</span>
+              </div>
+            </div>
+
+            <!-- Sensor 2: Dissolved H2 Gas -->
+            <div class="terra-card" style="padding: 14px 18px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-size: 12px; font-weight: 600; color: #2e3230;">Dissolved H2</span>
+              <div style="margin: 6px 0;">
+                <span class="font-mono" style="font-size: 20px; font-weight: 700; color: #2e3230;">18.4 <span style="font-size: 12px; font-weight: 400; color: #5e5548;">ppm</span></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">
+                <span>Base: 14 ppm</span>
+                <span style="color: #4a7c59; font-weight: 700;">NOMINAL</span>
+              </div>
+            </div>
+
+            <!-- Sensor 3: Moisture in Oil -->
+            <div class="terra-card" style="padding: 14px 18px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-size: 12px; font-weight: 600; color: #2e3230;">Moisture in Oil</span>
+              <div style="margin: 6px 0;">
+                <span class="font-mono" style="font-size: 20px; font-weight: 700; color: #2e3230;">12.1 <span style="font-size: 12px; font-weight: 400; color: #5e5548;">ppm</span></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">
+                <span>Base: 11.5 ppm</span>
+                <span style="color: #4a7c59; font-weight: 700;">NOMINAL</span>
+              </div>
+            </div>
+
+            <!-- Sensor 4: Dielectric Strength -->
+            <div class="terra-card" style="padding: 14px 18px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-size: 12px; font-weight: 600; color: #2e3230;">Dielectric Strength</span>
+              <div style="margin: 6px 0;">
+                <span class="font-mono" style="font-size: 20px; font-weight: 700; color: #2e3230;">66.5 <span style="font-size: 12px; font-weight: 400; color: #5e5548;">kV</span></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">
+                <span>Base: 68 kV</span>
+                <span style="color: #4a7c59; font-weight: 700;">OPTIMAL</span>
+              </div>
+            </div>
+
+            <!-- Sensor 5: Core Acoustic Noise -->
+            <div class="terra-card" style="padding: 14px 18px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-size: 12px; font-weight: 600; color: #2e3230;">Core Vibration</span>
+              <div style="margin: 6px 0;">
+                <span class="font-mono" style="font-size: 20px; font-weight: 700; color: #2e3230;">48.2 <span style="font-size: 12px; font-weight: 400; color: #5e5548;">dB</span></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">
+                <span>Base: 46 dB</span>
+                <span style="color: #4a7c59; font-weight: 700;">NOMINAL</span>
+              </div>
+            </div>
+
+            <!-- Sensor 6: Bushing Power Factor -->
+            <div class="terra-card" style="padding: 14px 18px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-size: 12px; font-weight: 600; color: #2e3230;">Bushing Factor</span>
+              <div style="margin: 6px 0;">
+                <span class="font-mono" style="font-size: 20px; font-weight: 700; color: #2e3230;">0.38 <span style="font-size: 12px; font-weight: 400; color: #5e5548;">%</span></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">
+                <span>Base: 0.35%</span>
+                <span style="color: #4a7c59; font-weight: 700;">NOMINAL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 3: AUTOENCODER 3-SIGMA KNEE INTERCEPT (13.09s - 20.73s) -->
+      <!-- ============================================================ -->
+      <div id="scene-3" class="stage-scene grid-bg clip" data-start="13.09" data-duration="7.64" style="opacity: 0;" data-hold="true">
+        <div class="scene-container">
+          <!-- Critical Intercept Banner -->
+          <div id="s3-alert-banner" class="glow-red" style="padding: 16px 28px; border-radius: 16px; background-color: #fceae9; border: 2px solid #b83230; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <span class="material-symbols-outlined" style="color: #b83230; font-size: 36px;">warning</span>
+              <div>
+                <h3 class="font-headline" style="font-size: 26px; font-weight: 700; color: #690005;">
+                  CRITICAL STATISTICAL KNEE-POINT DETECTED · DAY 105 ONSET
+                </h3>
+                <p style="font-size: 13px; color: #b83230; font-family: 'JetBrains Mono', monospace; font-weight: 600;" data-layout-ignore="true">
+                  Autoencoder Reconstruction MSE spiked 340% past 3σ baseline (0.0082) · Incipient Micro-Arcing
+                </p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px;" data-layout-ignore="true">
+              <span class="pulse-dot-red"></span>
+              <span style="padding: 8px 16px; border-radius: 12px; background-color: #b83230; color: white; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase;">
+                AUTO-SNAPSHOT FROZEN
+              </span>
+            </div>
+          </div>
+
+          <!-- Main Analysis Split -->
+          <div class="grid-12">
+            <!-- Left Chart Panel (7 cols) -->
+            <div id="s3-chart-card" class="col-7 terra-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div>
+                  <h4 class="font-headline" style="font-size: 22px; font-weight: 700; color: #2e3230;">Autoencoder Reconstruction MSE Curve</h4>
+                  <p style="font-size: 12px; color: #5e5548; font-family: 'JetBrains Mono', monospace;" data-layout-ignore="true">PyTorch Multidimensional Vector Residuals · Days 50 to 110</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px;" data-layout-ignore="true">
+                  <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #8a6627;">
+                    <span style="width: 14px; height: 2px; background-color: #8a6627;"></span>
+                    <span>3σ Knee (0.0082)</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #b83230;">
+                    <span style="width: 14px; height: 2px; background-color: #b83230;"></span>
+                    <span>MSE Error</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Trajectory Chart SVG -->
+              <div style="width: 100%; height: 260px; position: relative; margin: 8px 0;" data-layout-ignore="true">
+                <svg style="width: 100%; height: 100%;" viewBox="0 0 800 260">
+                  <!-- Grid horizontal lines -->
+                  <line x1="60" y1="40" x2="780" y2="40" stroke="#eae6de" stroke-width="1" />
+                  <line x1="60" y1="100" x2="780" y2="100" stroke="#eae6de" stroke-width="1" />
+                  <line x1="60" y1="160" x2="780" y2="160" stroke="#eae6de" stroke-width="1" />
+                  <line x1="60" y1="220" x2="780" y2="220" stroke="#74796e" stroke-width="1" />
+
+                  <!-- Y-Axis Labels -->
+                  <text x="50" y="44" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="end">0.015</text>
+                  <text x="50" y="104" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="end">0.010</text>
+                  <text x="50" y="164" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="end">0.005</text>
+                  <text x="50" y="224" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="end">0.000</text>
+
+                  <!-- 3-Sigma Threshold Line -->
+                  <line x1="60" y1="125" x2="780" y2="125" stroke="#8a6627" stroke-width="2" stroke-dasharray="6 4" />
+                  <text x="770" y="118" fill="#8a6627" font-size="11" font-family="JetBrains Mono" text-anchor="end" font-weight="bold">3σ Statistical Knee = 0.0082</text>
+
+                  <!-- MSE Reconstruction Trajectory Curve -->
+                  <path
+                    id="s3-mse-path"
+                    d="M 60 200 C 240 200, 420 198, 520 195 C 580 190, 620 165, 680 125 C 720 95, 750 60, 780 48"
+                    fill="none"
+                    stroke="#b83230"
+                    stroke-width="3.5"
+                    stroke-linecap="round"
+                  />
+
+                  <!-- Knee Point Beacon Point at (680, 125) -->
+                  <circle cx="680" cy="125" r="7" fill="#b83230" />
+                  <circle cx="680" cy="125" r="14" fill="none" stroke="#b83230" stroke-width="2" opacity="0.5" />
+                  <text x="680" y="152" fill="#b83230" font-size="12" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">Day 105 Intercept</text>
+
+                  <!-- X-Axis Labels -->
+                  <text x="60" y="240" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="middle">Day 50</text>
+                  <text x="260" y="240" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="middle">Day 70</text>
+                  <text x="460" y="240" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="middle">Day 90</text>
+                  <text x="680" y="240" fill="#b83230" font-size="11" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">Day 105</text>
+                  <text x="780" y="240" fill="#5e5548" font-size="11" font-family="JetBrains Mono" text-anchor="middle">Day 110</text>
+                </svg>
+              </div>
+
+              <div style="padding: 10px 16px; background-color: #faf6f0; border-radius: 12px; border: 1px solid #e4e0d8; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #5e5548;" data-layout-ignore="true">
+                <span>Stage 1 Filter: Gaussian Kernelized MSE</span>
+                <span style="color: #b83230; font-weight: 700;">CURRENT MSE: 0.0142 (BREACH +73%)</span>
+              </div>
+            </div>
+
+            <!-- Right Attribution Matrix (5 cols) -->
+            <div id="s3-attribution-card" class="col-5 terra-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <h4 class="font-headline" style="font-size: 22px; font-weight: 700; color: #2e3230; margin-bottom: 4px;">Channel Anomaly Attribution</h4>
+                <p style="font-size: 12px; color: #5e5548; font-family: 'JetBrains Mono', monospace; margin-bottom: 16px;" data-layout-ignore="true">Gradient Attribution via Input-Loss Backprop</p>
+
+                <!-- Attribution Bar 1 -->
+                <div style="margin-bottom: 16px;" data-layout-ignore="true">
+                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px;">
+                    <span style="font-weight: 700; color: #2e3230;">Dissolved H2 Gas (DGA)</span>
+                    <span style="color: #b83230; font-weight: 700;">142.0 ppm (+914%)</span>
+                  </div>
+                  <div style="width: 100%; height: 10px; background-color: #eae6de; border-radius: 9999px; overflow: hidden;">
+                    <div id="s3-bar-1" style="height: 100%; width: 88%; background-color: #b83230; border-radius: 9999px;"></div>
+                  </div>
+                  <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">Incipient thermal micro-arcing in winding paper</span>
+                </div>
+
+                <!-- Attribution Bar 2 -->
+                <div style="margin-bottom: 16px;" data-layout-ignore="true">
+                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px;">
+                    <span style="font-weight: 700; color: #2e3230;">Moisture in Oil</span>
+                    <span style="color: #8a6627; font-weight: 700;">24.6 ppm (+114%)</span>
+                  </div>
+                  <div style="width: 100%; height: 10px; background-color: #eae6de; border-radius: 9999px; overflow: hidden;">
+                    <div id="s3-bar-2" style="height: 100%; width: 58%; background-color: #8a6627; border-radius: 9999px;"></div>
+                  </div>
+                  <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">Accelerated cellulose insulation depolymerization</span>
+                </div>
+
+                <!-- Attribution Bar 3 -->
+                <div style="margin-bottom: 16px;" data-layout-ignore="true">
+                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px;">
+                    <span style="font-weight: 700; color: #2e3230;">Dielectric Strength</span>
+                    <span style="color: #8a6627; font-weight: 700;">42.0 kV (-38% Drop)</span>
+                  </div>
+                  <div style="width: 100%; height: 10px; background-color: #eae6de; border-radius: 9999px; overflow: hidden;">
+                    <div id="s3-bar-3" style="height: 100%; width: 64%; background-color: #8a6627; border-radius: 9999px;"></div>
+                  </div>
+                  <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #5e5548;">Insulating oil breakdown threshold in danger zone</span>
+                </div>
+              </div>
+
+              <div style="padding: 12px 16px; background-color: #fceae9; border-radius: 12px; border: 1px solid rgba(184, 50, 48, 0.3); font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #690005;" data-layout-ignore="true">
+                <span style="font-weight: 700;">CONVENTIONAL SCADA:</span> Still reading "Normal". SENTRY flags mathematical onset 34 days ahead.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 4: GRU SEQUENCE REMAINING USEFUL LIFE (20.73s - 27.28s) -->
+      <!-- ============================================================ -->
+      <div id="scene-4" class="stage-scene grid-bg clip" data-start="20.73" data-duration="6.55" style="opacity: 0;" data-hold="true">
+        <div class="scene-container">
+          <!-- Top Tag Bar -->
+          <div id="s4-header" style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="padding: 6px 14px; border-radius: 9999px; background-color: #d7e8db; color: #173b22; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase;" data-layout-ignore="true">
+                STAGE 2 SEQUENCE REGRESSION
+              </span>
+              <h2 class="font-headline" style="font-size: 32px; font-weight: 700; color: #2e3230;">
+                Prognostics Horizon: Exact Remaining Useful Life (RUL)
+              </h2>
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #5e5548; background-color: #faf6f0; padding: 6px 16px; border-radius: 12px; border: 1px solid #e4e0d8;" data-layout-ignore="true">
+              Architecture: PyTorch Bidirectional GRU · 30-Day Sliding Tensor
+            </div>
+          </div>
+
+          <!-- Hero Prognostics Card -->
+          <div id="s4-prognostics" class="terra-card grid-12" style="padding: 28px; align-items: center;">
+            <!-- Left Big Readout (5 cols) -->
+            <div class="col-5" style="border-right: 1px solid #e4e0d8; padding-right: 32px; display: flex; flex-direction: column; justify-content: center;">
+              <span style="font-size: 13px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; color: #5e5548; letter-spacing: 0.05em; margin-bottom: 8px;" data-layout-ignore="true">
+                Calculated Degradation Runway
+              </span>
+              <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px;">
+                <span id="s4-rul-number" class="font-headline" style="font-size: 72px; font-weight: 700; color: #b83230; line-height: 1;">34</span>
+                <span class="font-headline" style="font-size: 36px; font-weight: 600; color: #2e3230;">Days Remaining</span>
+              </div>
+
+              <!-- 95% Confidence Interval Banner -->
+              <div style="padding: 14px 18px; border-radius: 14px; background-color: #f0ece4; border: 1px solid #e4e0d8; margin-bottom: 12px;" data-layout-ignore="true">
+                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #2e3230; margin-bottom: 4px;">
+                  <span style="font-weight: 700;">95% Confidence Interval</span>
+                  <span style="font-weight: 700; color: #4a7c59;">[31 Days – 38 Days]</span>
+                </div>
+                <div style="width: 100%; height: 8px; background-color: #eae6de; border-radius: 9999px; overflow: hidden; position: relative;">
+                  <div style="position: absolute; left: 35%; right: 25%; height: 100%; background-color: #4a7c59; border-radius: 9999px;"></div>
+                </div>
+              </div>
+
+              <p style="font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #5e5548; line-height: 1.5;" data-layout-ignore="true">
+                NASA Asymmetric Penalty Loss applied: Penalizes late predictions 3x heavier to eliminate sudden flashover risk.
+              </p>
+            </div>
+
+            <!-- Right Runway Projection Chart (7 cols) -->
+            <div class="col-7" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 15px; font-weight: 600; color: #2e3230;">Remaining Useful Life Decay Trajectory</span>
+                <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #4a7c59; font-weight: 700;" data-layout-ignore="true">Safe Intervention: Days 105–125</span>
+              </div>
+
+              <!-- Degradation Curve SVG -->
+              <div style="width: 100%; height: 210px; position: relative; margin: 8px 0;" data-layout-ignore="true">
+                <svg style="width: 100%; height: 100%;" viewBox="0 0 700 200">
+                  <!-- Green Safe Zone -->
+                  <rect x="60" y="20" width="280" height="150" fill="#d7e8db" opacity="0.4" />
+                  <!-- Amber Warning Zone -->
+                  <rect x="340" y="20" width="200" height="150" fill="#f8e0a8" opacity="0.4" />
+                  <!-- Red Critical Zone -->
+                  <rect x="540" y="20" width="120" height="150" fill="#fceae9" opacity="0.5" />
+
+                  <!-- Zone Text Labels -->
+                  <text x="200" y="38" fill="#173b22" font-size="11" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">OPTIMAL INTERVENTION WINDOW</text>
+                  <text x="440" y="38" fill="#8a6627" font-size="11" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">RISK ELEVATION</text>
+                  <text x="600" y="38" fill="#b83230" font-size="11" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">FLASHOVER</text>
+
+                  <!-- Axes -->
+                  <line x1="60" y1="170" x2="660" y2="170" stroke="#74796e" stroke-width="1" />
+                  <line x1="60" y1="20" x2="60" y2="170" stroke="#74796e" stroke-width="1" />
+
+                  <!-- Degradation Trajectory -->
+                  <path
+                    d="M 60 45 C 180 45, 300 60, 400 85 C 480 110, 560 145, 660 165"
+                    fill="none"
+                    stroke="#2e3230"
+                    stroke-width="3"
+                    stroke-dasharray="6 4"
+                  />
+
+                  <!-- Present Day Marker at x=340 (Day 105) -->
+                  <line x1="340" y1="20" x2="340" y2="170" stroke="#b83230" stroke-width="2" />
+                  <circle cx="340" cy="70" r="6" fill="#b83230" />
+                  <text x="340" y="15" fill="#b83230" font-size="11" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">Today (Day 105)</text>
+
+                  <!-- Time axis ticks -->
+                  <text x="60" y="190" fill="#5e5548" font-size="10" font-family="JetBrains Mono" text-anchor="middle">Day 50</text>
+                  <text x="340" y="190" fill="#b83230" font-size="10" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">Day 105</text>
+                  <text x="540" y="190" fill="#5e5548" font-size="10" font-family="JetBrains Mono" text-anchor="middle">Day 139 (EoL)</text>
+                </svg>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #5e5548;" data-layout-ignore="true">
+                <span>Inference Latency: 1.8ms</span>
+                <span>GPU-Vectorized Tensor Runtime</span>
+                <span style="color: #4a7c59; font-weight: 700;">100% Deterministic Fallback Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 5: GENAI COPILOT DIAGNOSIS & WORK ORDER (27.28s - 33.83s) -->
+      <!-- ============================================================ -->
+      <div id="scene-5" class="stage-scene grid-bg clip" data-start="27.28" data-duration="6.55" style="opacity: 0;" data-hold="true">
+        <div class="scene-container">
+          <!-- Top Tag Bar -->
+          <div id="s5-header" style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="padding: 6px 14px; border-radius: 9999px; background-color: #d7e8db; color: #173b22; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase;" data-layout-ignore="true">
+                DIAGNOSTIC COPILOT · GEMINI 2.5 FLASH
+              </span>
+              <h2 class="font-headline" style="font-size: 32px; font-weight: 700; color: #2e3230;">
+                Autonomous Root-Cause Synthesis &amp; CMMS Work Order
+              </h2>
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #5e5548; background-color: #faf6f0; padding: 6px 16px; border-radius: 12px; border: 1px solid #e4e0d8;" data-layout-ignore="true">
+              GenAI Bridge · Deterministic Physics Fallback Ready
+            </div>
+          </div>
+
+          <!-- Split Diagnostic & Work Order Cards -->
+          <div class="grid-12">
+            <!-- Left: Gemini Copilot Card (7 cols) -->
+            <div id="s5-copilot-card" class="col-7 terra-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e4e0d8;">
+                  <div style="width: 40px; height: 40px; border-radius: 12px; background-color: #4a7c59; color: white; display: flex; align-items: center; justify-content: center;">
+                    <span class="material-symbols-outlined" style="font-size: 22px;">psychology</span>
+                  </div>
+                  <div>
+                    <h4 class="font-headline" style="font-size: 22px; font-weight: 700; color: #2e3230;">Gemini Reliability Copilot</h4>
+                    <p style="font-size: 12px; color: #5e5548; font-family: 'JetBrains Mono', monospace;" data-layout-ignore="true">Thermodynamic &amp; DGA Chemical Analysis</p>
+                  </div>
+                </div>
+
+                <!-- Copilot Diagnostic Text -->
+                <div style="display: flex; flex-direction: column; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.5; color: #2e3230;" data-layout-ignore="true">
+                  <div id="s5-diag-box1" style="padding: 14px 18px; background-color: #f0ece4; border-radius: 14px; border: 1px solid #e4e0d8;">
+                    <span style="color: #b83230; font-weight: 700; display: block; margin-bottom: 4px;">PHYSICAL ROOT-CAUSE IDENTIFIED:</span>
+                    Phase B winding micro-arcing. Dissolved H2 surges +914% (142 ppm); moisture reaches 24.6 ppm.
+                  </div>
+
+                  <div id="s5-diag-box2" style="padding: 14px 18px; background-color: rgba(215, 232, 219, 0.4); border-radius: 14px; border: 1px solid rgba(74, 124, 89, 0.3);">
+                    <span style="color: #173b22; font-weight: 700; display: block; margin-bottom: 4px;">CONDITION INTERVENTION PRESCRIPTION:</span>
+                    Deploy mobile oil vacuum degasification. Dehydrate to &lt;10 ppm moisture within 72 hours.
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #5e5548; padding-top: 8px; border-top: 1px solid #e4e0d8;" data-layout-ignore="true">
+                <span>Model: Google Gemini 2.5 Flash</span>
+                <span>Diagnostic Confidence: 96.8%</span>
+              </div>
+            </div>
+
+            <!-- Right: Autonomous Work Order Card (5 cols) -->
+            <div id="s5-work-order" class="col-5 terra-card" style="padding: 24px; border: 2px solid #4a7c59; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px rgba(74, 124, 89, 0.15);">
+              <div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e4e0d8;">
+                  <div>
+                    <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #4a7c59;" data-layout-ignore="true">Condition Maintenance Order</span>
+                    <h4 class="font-headline" style="font-size: 26px; font-weight: 700; color: #2e3230;">#WO-9402</h4>
+                  </div>
+                  <span style="padding: 4px 12px; border-radius: 9999px; background-color: #d7e8db; color: #173b22; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;" data-layout-ignore="true">
+                    DISPATCHED
+                  </span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; font-family: 'JetBrains Mono', monospace;" data-layout-ignore="true">
+                  <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid #eae6de;">
+                    <span style="color: #5e5548;">Target Asset:</span>
+                    <span style="font-weight: 700; color: #2e3230;">Transformer TX-400 (Bay 3)</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid #eae6de;">
+                    <span style="color: #5e5548;">Assigned Crew:</span>
+                    <span style="font-weight: 700; color: #2e3230;">HV Grid Reliability Crew #4</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid #eae6de;">
+                    <span style="color: #5e5548;">Window:</span>
+                    <span style="font-weight: 700; color: #4a7c59;">48h Low-Demand Window</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid #eae6de;">
+                    <span style="color: #5e5548;">Action Required:</span>
+                    <span style="font-weight: 700; color: #2e3230;">Mobile Vacuum Degasification</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #5e5548;">Parts / Materials:</span>
+                    <span style="font-weight: 700; color: #2e3230;">Cellulose Filter Cartridges</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dispatch Stamp -->
+              <div id="s5-stamp" style="padding: 12px 18px; background-color: #d7e8db; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #173b22; font-weight: 700;" data-layout-ignore="true">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="material-symbols-outlined" style="font-size: 20px;">verified</span>
+                  <span>Autonomous CMMS Dispatch</span>
+                </div>
+                <span>SAP PM SYNCHRONIZED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 6: CAPITAL PRESERVED ROI & BRAND OUTRO (33.83s - 40.0s) -->
+      <!-- ============================================================ -->
+      <div id="scene-6" class="stage-scene grid-bg clip" data-start="33.83" data-duration="6.17" style="opacity: 0;" data-hold="true">
+        <!-- Part A: Hero Bento Preservation Card (33.83s - 36.8s) -->
+        <div id="s6-bento" class="scene-container grid-12" style="z-index: 20;">
+          <!-- Big Left Preservation Card (8 cols) -->
+          <div class="col-8" style="border-radius: 24px; background-color: #4a7c59; color: white; padding: 36px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 40px rgba(46, 50, 48, 0.2); position: relative; overflow: hidden;">
+            <div style="position: absolute; right: -40px; bottom: -40px; width: 260px; height: 260px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.06); pointer-events: none;" data-layout-ignore="true"></div>
+
+            <div>
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                <span style="padding: 4px 12px; border-radius: 9999px; background-color: rgba(255, 255, 255, 0.2); font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;" data-layout-ignore="true">
+                  CAPITAL PRESERVATION OUTCOME
+                </span>
+                <span style="color: rgba(255, 255, 255, 0.8); font-family: 'JetBrains Mono', monospace; font-size: 12px;" data-layout-ignore="true">Substation Transformer TX-400</span>
+              </div>
+
+              <span style="display: block; color: rgba(255, 255, 255, 0.85); font-family: 'JetBrains Mono', monospace; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;" data-layout-ignore="true">
+                Catastrophic Failure Avoided
+              </span>
+
+              <!-- Animated Preservation Counter -->
+              <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px;">
+                <span id="s6-counter" class="font-headline" style="font-size: 88px; font-weight: 700; letter-spacing: -0.03em; color: white; line-height: 1;">+$428,000</span>
+              </div>
+
+              <p class="font-headline" style="font-size: 24px; color: rgba(255, 255, 255, 0.95); max-width: 600px; line-height: 1.3;">
+                Transitioned catastrophic emergency replacement into planned condition-based mobile oil reclaiming.
+              </p>
+            </div>
+
+            <!-- Bottom ROI Metrics -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.2);" data-layout-ignore="true">
+              <div>
+                <span style="display: block; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: rgba(255, 255, 255, 0.7); text-transform: uppercase; margin-bottom: 4px;">Avoided Outage</span>
+                <span class="font-headline" style="font-size: 26px; font-weight: 700; color: white;">$450,000</span>
+              </div>
+              <div>
+                <span style="display: block; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: rgba(255, 255, 255, 0.7); text-transform: uppercase; margin-bottom: 4px;">Scheduled Cost</span>
+                <span class="font-headline" style="font-size: 26px; font-weight: 700; color: white;">$22,000</span>
+              </div>
+              <div>
+                <span style="display: block; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: rgba(255, 255, 255, 0.7); text-transform: uppercase; margin-bottom: 4px;">Net Return</span>
+                <span class="font-headline" style="font-size: 26px; font-weight: 700; color: #f8e0a8;">1,945% ROI</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Breakdown Cards (4 cols) -->
+          <div class="col-4" style="display: flex; flex-direction: column; gap: 16px; justify-content: space-between;">
+            <div class="terra-card" style="padding: 24px; border-left: 6px solid #b83230;">
+              <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 700; text-transform: uppercase; color: #b83230;" data-layout-ignore="true">Catastrophic Cost Avoided</span>
+              <div class="font-headline" style="font-size: 32px; font-weight: 700; color: #2e3230; margin-top: 4px;">$450,000</div>
+              <p style="font-size: 13px; color: #5e5548; margin-top: 6px; font-family: 'JetBrains Mono', monospace; line-height: 1.4;" data-layout-ignore="true">
+                Dielectric flashover, transformer core rewind, emergency mobile bypass, and grid penalty.
+              </p>
+            </div>
+
+            <div class="terra-card" style="padding: 24px; border-left: 6px solid #4a7c59;">
+              <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 700; text-transform: uppercase; color: #4a7c59;" data-layout-ignore="true">Condition Intervention</span>
+              <div class="font-headline" style="font-size: 32px; font-weight: 700; color: #2e3230; margin-top: 4px;">$22,000</div>
+              <p style="font-size: 13px; color: #5e5548; margin-top: 6px; font-family: 'JetBrains Mono', monospace; line-height: 1.4;" data-layout-ignore="true">
+                Planned vacuum degasification, cellulose drying, and bushing gasket reseal.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part B: Grand Brand Lockup (36.8s - 40.0s) -->
+        <div id="s6-brand" style="position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background-color: #f5f1ea; z-index: 30;">
+          <div style="width: 100px; height: 100px; border-radius: 28px; background-color: #4a7c59; color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(74, 124, 89, 0.3); margin-bottom: 24px;">
+            <span class="material-symbols-outlined" style="font-size: 56px;">electric_bolt</span>
+          </div>
+
+          <h1 class="font-headline" style="font-size: 72px; font-weight: 700; color: #2e3230; letter-spacing: -0.02em; margin-bottom: 12px;">
+            SENTRY IQ
+          </h1>
+
+          <p class="font-headline" style="font-size: 32px; color: #4a7c59; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 32px;">
+            Industrial IoT Predictive Maintenance · Zero Unplanned Outages
+          </p>
+
+          <div style="display: flex; align-items: center; gap: 20px; font-size: 15px; font-family: 'JetBrains Mono', monospace; color: #5e5548; background-color: #faf6f0; padding: 14px 32px; border-radius: 16px; border: 1px solid #e4e0d8; box-shadow: 0 4px 20px rgba(46, 50, 48, 0.05);" data-layout-ignore="true">
+            <span>Two-Stage PyTorch Deep Learning</span>
+            <span>·</span>
+            <span>Google Gemini Copilot</span>
+            <span>·</span>
+            <span>High-Voltage Grid &amp; Multi-Asset Fleet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GSAP Master Animation Timeline -->
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // ==========================================
+      // SCENE 1 TIMELINE (0.0s - 5.46s)
+      // ==========================================
+      tl.from("#s1-subtitle", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.4);
+      tl.from("#s1-icon", { y: 15, opacity: 0, duration: 0.7, ease: "power3.out" }, 0.9);
+      tl.from("#s1-wave", { opacity: 0, scaleX: 0.8, duration: 1.0, ease: "power2.out" }, 1.4);
+      tl.to("#s1-wave-path", { strokeDashoffset: 50, duration: 3.5, ease: "none" }, 1.5);
+      tl.to("#scene-1", { opacity: 0, scale: 0.98, duration: 0.4, ease: "power2.inOut" }, 5.06);
+
+      // ==========================================
+      // SCENE 2 TIMELINE (5.46s - 13.09s)
+      // ==========================================
+      tl.to("#scene-2", { opacity: 1, duration: 0.3 }, 5.46);
+      tl.from("#s2-topbar", { y: -25, opacity: 0, duration: 0.5, ease: "power3.out" }, 5.5);
+      tl.from("#s2-hero", { y: 30, opacity: 0, duration: 0.6, ease: "power3.out" }, 5.8);
+      tl.from("#s2-sensors > div", { y: 25, opacity: 0, stagger: 0.08, duration: 0.5, ease: "power3.out" }, 6.1);
+
+      // Vitality Ring Animation (from 100% to 89.2%)
+      tl.fromTo(
+        "#s2-vitality-ring",
+        { strokeDashoffset: 0 },
+        { strokeDashoffset: 28.5, duration: 4.5, ease: "power2.out" },
+        6.4
+      );
+      tl.to("#s2-sensors > div:nth-child(2)", { borderColor: "#c4a66a", duration: 0.8, yoyo: true, repeat: 1 }, 9.5);
+      tl.to("#scene-2", { opacity: 0, scale: 0.98, duration: 0.4, ease: "power2.inOut" }, 12.69);
+
+      // ==========================================
+      // SCENE 3 TIMELINE (13.09s - 20.73s)
+      // ==========================================
+      tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 13.09);
+      tl.from("#s3-alert-banner", { y: -30, opacity: 0, duration: 0.5, ease: "back.out(1.2)" }, 13.1);
+      tl.from("#s3-chart-card", { x: -35, opacity: 0, duration: 0.6, ease: "power3.out" }, 13.4);
+      tl.from("#s3-attribution-card", { x: 35, opacity: 0, duration: 0.6, ease: "power3.out" }, 13.6);
+
+      // MSE Spiking curve drawing
+      tl.fromTo(
+        "#s3-mse-path",
+        { strokeDasharray: 900, strokeDashoffset: 900 },
+        { strokeDashoffset: 0, duration: 4.0, ease: "power2.inOut" },
+        13.8
+      );
+      tl.to("#scene-3", { opacity: 0, scale: 0.98, duration: 0.4, ease: "power2.inOut" }, 20.33);
+
+      // ==========================================
+      // SCENE 4 TIMELINE (20.73s - 27.28s)
+      // ==========================================
+      tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 20.73);
+      tl.from("#s4-header", { y: -20, opacity: 0, duration: 0.5, ease: "power3.out" }, 20.8);
+      tl.from("#s4-prognostics", { y: 30, opacity: 0, duration: 0.6, ease: "power3.out" }, 21.0);
+      tl.from("#s4-rul-number", { scale: 0.8, opacity: 0, duration: 0.6, ease: "back.out(1.5)" }, 21.4);
+      tl.to("#s4-prognostics", { borderColor: "#4a7c59", duration: 0.7, yoyo: true, repeat: 1 }, 23.8);
+      tl.to("#scene-4", { opacity: 0, scale: 0.98, duration: 0.4, ease: "power2.inOut" }, 26.88);
+
+      // ==========================================
+      // SCENE 5 TIMELINE (27.28s - 33.83s)
+      // ==========================================
+      tl.to("#scene-5", { opacity: 1, duration: 0.3 }, 27.28);
+      tl.from("#s5-header", { y: -20, opacity: 0, duration: 0.5, ease: "power3.out" }, 27.3);
+      tl.from("#s5-copilot-card", { x: -30, opacity: 0, duration: 0.6, ease: "power3.out" }, 27.5);
+      tl.from("#s5-diag-box1", { opacity: 0, y: 10, duration: 0.5 }, 27.8);
+      tl.from("#s5-diag-box2", { opacity: 0, y: 10, duration: 0.5 }, 29.2);
+      tl.from("#s5-work-order", { x: 30, opacity: 0, duration: 0.6, ease: "power3.out" }, 28.2);
+      tl.from("#s5-stamp", { scale: 0.9, duration: 0.4, ease: "back.out(1.5)" }, 30.5);
+      tl.to("#scene-5", { opacity: 0, scale: 0.98, duration: 0.4, ease: "power2.inOut" }, 33.43);
+
+      // ==========================================
+      // SCENE 6 TIMELINE (33.83s - 40.0s)
+      // ==========================================
+      tl.to("#scene-6", { opacity: 1, duration: 0.3 }, 33.83);
+      tl.from("#s6-bento > div:first-child", { scale: 0.92, opacity: 0, duration: 0.6, ease: "back.out(1.4)" }, 33.85);
+      tl.from("#s6-bento > div:last-child > div", { y: 25, opacity: 0, stagger: 0.15, duration: 0.5, ease: "power3.out" }, 34.1);
+
+      // Counter Roll
+      tl.from("#s6-counter", { scale: 0.95, duration: 0.4, ease: "power2.out" }, 34.3);
+
+      // Clean swap: Hide Bento card before displaying Brand Lockup to avoid occlusion/overlap
+      tl.to("#s6-bento", { opacity: 0, duration: 0.35, ease: "power2.in" }, 36.6);
+      tl.set("#s6-bento", { display: "none" }, 36.95);
+      tl.set("#s6-brand", { display: "flex", opacity: 0 }, 36.95);
+      tl.to("#s6-brand", { opacity: 1, duration: 0.4, ease: "power2.out" }, 37.0);
+      tl.from("#s6-brand > *", { y: 20, opacity: 0, stagger: 0.1, duration: 0.5, ease: "power3.out" }, 37.1);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

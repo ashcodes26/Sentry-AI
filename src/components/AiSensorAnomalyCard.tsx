@@ -52,68 +52,66 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDetailsExpanded, setIsDetailsExpanded] = useState<boolean>(false);
 
-  // Compile sensor deviations
   const sensorMetrics = asset.sensors.map((s) => {
     const valKey = s.key as keyof TelemetryPoint;
     const currentVal = Number(activePoint[valKey] || 0);
     const baseline = s.baseline;
     const delta = currentVal - baseline;
     const pctDelta = Number(((delta / (baseline || 1)) * 100).toFixed(1));
-    const isWarning = Math.abs(pctDelta) > 8 && Math.abs(pctDelta) <= 20;
     const isCritical = Math.abs(pctDelta) > 20;
-
+    const isWarning = Math.abs(pctDelta) > 8 && !isCritical;
     return {
-      key: s.key,
       name: s.name,
       unit: s.unit,
+      current: currentVal.toFixed(1),
       baseline,
-      current: currentVal,
-      delta: Number(delta.toFixed(2)),
+      delta: Number(delta.toFixed(1)),
       pctDelta,
-      isWarning,
       isCritical,
+      isWarning,
     };
   });
 
   const fetchAnomalyDiagnosis = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/anomaly/diagnose', {
+      const payload = {
+        assetName: asset.name,
+        assetType: asset.type,
+        category: asset.category,
+        currentCycle,
+        maxLife: asset.maxLife,
+        timeUnit: asset.timeUnit,
+        healthIndexMse: activePoint.health_index_mse,
+        threshold3Sigma: asset.threshold3Sigma,
+        rulPred: activePoint.RUL_pred,
+        sensors: sensorMetrics,
+      };
+
+      const res = await fetch('/api/anomaly/diagnose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          assetName: asset.name,
-          assetType: asset.type,
-          category: asset.category,
-          currentCycle,
-          maxLife: asset.maxLife,
-          timeUnit: asset.timeUnit,
-          healthIndexMse: activePoint.health_index_mse,
-          threshold3Sigma: asset.threshold3Sigma,
-          rulPred: activePoint.RUL_pred,
-          sensors: sensorMetrics,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch AI anomaly diagnosis');
+      if (!res.ok) {
+        throw new Error(`API responded with ${res.status}`);
       }
 
-      const data: AnomalyData = await response.json();
+      const data = await res.json();
       setAnomalyData(data);
     } catch {
-      // Local fallback calculation if fetch fails
       const criticalCount = sensorMetrics.filter((s) => s.isCritical).length;
       const warningCount = sensorMetrics.filter((s) => s.isWarning).length;
+      const hasAnomaly = activePoint.health_index_mse > asset.threshold3Sigma || criticalCount > 0 || warningCount > 0;
       const mseRatio = activePoint.health_index_mse / asset.threshold3Sigma;
 
-      const hasAnomaly = activePoint.health_index_mse > asset.threshold3Sigma || criticalCount > 0 || warningCount > 0;
       const severity: 'NOMINAL' | 'DRIFT' | 'WARNING' | 'CRITICAL' =
         criticalCount > 0 || mseRatio >= 2.0
           ? 'CRITICAL'
-          : warningCount > 0 || mseRatio > 1.0
+          : warningCount > 0 || mseRatio >= 1.0
           ? 'WARNING'
-          : mseRatio > 0.8
+          : activePoint.health_index_mse > asset.threshold3Sigma * 0.8
           ? 'DRIFT'
           : 'NOMINAL';
 
@@ -162,7 +160,6 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
     }
   };
 
-  // Re-run diagnosis on asset change or milestone cycle change (every 10 cycles)
   useEffect(() => {
     fetchAnomalyDiagnosis();
   }, [asset.id, Math.floor(currentCycle / 10)]);
@@ -170,43 +167,38 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
   const mseRatio = activePoint.health_index_mse / asset.threshold3Sigma;
   const severity = anomalyData?.severity || (mseRatio > 1.8 ? 'CRITICAL' : mseRatio > 1.0 ? 'WARNING' : 'NOMINAL');
 
-  // Severity-dependent styling with lighter professional gradients
   const config = {
     NOMINAL: {
-      borderColor: 'border-emerald-500/40',
-      bgGlow: 'bg-gradient-to-r from-emerald-950/35 via-[#1b2538]/90 to-[#151f30]/90',
-      badgeBg: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40',
+      borderColor: 'border-surface-container-highest',
+      badgeBg: 'bg-primary-container text-on-primary-container border-primary/20',
       icon: CheckCircle2,
-      iconColor: 'text-emerald-400',
+      iconColor: 'text-primary',
       label: 'AI Sensor Anomaly: NOMINAL',
-      accentColor: '#10b981',
+      accentColor: '#4a7c59',
     },
     DRIFT: {
-      borderColor: 'border-blue-500/40',
-      bgGlow: 'bg-gradient-to-r from-blue-950/35 via-[#1b2538]/90 to-[#151f30]/90',
-      badgeBg: 'bg-blue-500/15 text-blue-300 border-blue-500/40',
+      borderColor: 'border-secondary/30',
+      badgeBg: 'bg-secondary-container text-on-secondary-container border-secondary/30',
       icon: Activity,
-      iconColor: 'text-blue-400',
+      iconColor: 'text-secondary',
       label: 'AI Sensor Monitor: EARLY DRIFT',
-      accentColor: '#38bdf8',
+      accentColor: '#6b6358',
     },
     WARNING: {
-      borderColor: 'border-amber-500/45',
-      bgGlow: 'bg-gradient-to-r from-amber-950/35 via-[#1b2538]/90 to-[#151f30]/90',
-      badgeBg: 'bg-amber-500/20 text-amber-200 border-amber-500/50',
+      borderColor: 'border-tertiary/40',
+      badgeBg: 'bg-tertiary-container text-on-tertiary-container border-tertiary/30',
       icon: AlertTriangle,
-      iconColor: 'text-amber-400',
+      iconColor: 'text-tertiary',
       label: 'AI Anomaly Detected: SENSOR DRIFT',
-      accentColor: '#f59e0b',
+      accentColor: '#8a6627',
     },
     CRITICAL: {
-      borderColor: 'border-rose-500/55',
-      bgGlow: 'bg-gradient-to-r from-rose-950/40 via-[#1b2538]/90 to-[#151f30]/90',
-      badgeBg: 'bg-rose-500/25 text-rose-200 border-rose-500/60',
+      borderColor: 'border-error/40',
+      badgeBg: 'bg-error-container text-error border-error/30',
       icon: AlertOctagon,
-      iconColor: 'text-rose-400',
+      iconColor: 'text-error',
       label: 'AI Critical Alert: ANOMALY BREACH',
-      accentColor: '#f43f5e',
+      accentColor: '#b83230',
     },
   }[severity];
 
@@ -214,46 +206,45 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
 
   return (
     <div
-      className={`relative rounded-xl border ${config.borderColor} ${config.bgGlow} p-4 sm:p-5 mb-6 transition-all duration-300 shadow-md backdrop-blur-sm overflow-hidden`}
+      className={`relative rounded-2xl border ${config.borderColor} bg-surface-container-low p-4 sm:p-5 mb-6 transition-all duration-300 shadow-sm overflow-hidden`}
     >
       {/* Decorative top pulse strip */}
       <div
         className="absolute top-0 left-0 right-0 h-1 transition-colors duration-500"
         style={{
           backgroundColor: config.accentColor,
-          opacity: severity === 'NOMINAL' ? 0.6 : 0.9,
-          boxShadow: `0 0 12px ${config.accentColor}`,
+          opacity: severity === 'NOMINAL' ? 0.7 : 0.95,
         }}
       />
 
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-700/60">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-surface-container-highest">
         <div className="flex items-center gap-3">
           <div
-            className={`p-2 rounded-lg border ${config.badgeBg} flex items-center justify-center shrink-0 shadow-inner`}
+            className={`p-2 rounded-xl border ${config.badgeBg} flex items-center justify-center shrink-0 shadow-sm`}
           >
             <IconComponent className={`w-5 h-5 ${config.iconColor} ${severity === 'CRITICAL' ? 'animate-pulse' : ''}`} />
           </div>
 
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${config.badgeBg} uppercase tracking-wider`}>
+              <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${config.badgeBg} uppercase tracking-wider font-mono`}>
                 {config.label}
               </span>
 
-              <span className="text-[11px] font-mono text-slate-300 flex items-center gap-1.5">
-                <Cpu className="w-3.5 h-3.5 text-blue-400" />
+              <span className="text-[11px] font-mono text-secondary flex items-center gap-1.5">
+                <Cpu className="w-3.5 h-3.5 text-primary" />
                 <span>Autoencoder MSE:</span>
-                <span className={`font-semibold ${activePoint.health_index_mse > asset.threshold3Sigma ? 'text-amber-400' : 'text-slate-100'}`}>
+                <span className={`font-semibold ${activePoint.health_index_mse > asset.threshold3Sigma ? 'text-tertiary' : 'text-on-surface'}`}>
                   {activePoint.health_index_mse.toFixed(4)}
                 </span>
-                <span className="text-slate-400 text-[10px]">
+                <span className="text-secondary text-[10px]">
                   (3σ: {asset.threshold3Sigma} · {mseRatio.toFixed(2)}x)
                 </span>
               </span>
             </div>
 
-            <h3 className="text-sm sm:text-base font-semibold text-white mt-1 flex items-center gap-1.5">
+            <h3 className="text-sm sm:text-base font-semibold text-on-surface mt-1 flex items-center gap-1.5">
               <span>{anomalyData?.headline || 'Scanning Multi-Channel Sensor Envelopes...'}</span>
             </h3>
           </div>
@@ -263,10 +254,10 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
         <div className="flex items-center gap-2 self-start sm:self-center">
           <button
             onClick={onToggleFilter}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all flex items-center gap-1.5 shadow-sm ${
+            className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition-all flex items-center gap-1.5 shadow-sm ${
               isOnlyAnomaliesFilter
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-500 shadow-md'
-                : 'bg-[#223048] hover:bg-[#2b3c59] text-slate-200 border-slate-600/60'
+                ? 'bg-primary text-on-primary border-primary shadow-sm'
+                : 'bg-surface hover:bg-surface-container border-surface-container-highest text-on-surface'
             }`}
             title="Filter to show only anomalous channels"
           >
@@ -276,7 +267,7 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
             </span>
             {anomalousChannelCount > 0 && (
               <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                isOnlyAnomaliesFilter ? 'bg-blue-800 text-blue-100' : 'bg-amber-500/25 text-amber-200 border border-amber-500/50'
+                isOnlyAnomaliesFilter ? 'bg-primary-container text-on-primary-container' : 'bg-tertiary-container text-on-tertiary-container'
               }`}>
                 {anomalousChannelCount}
               </span>
@@ -286,10 +277,10 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
           <button
             onClick={fetchAnomalyDiagnosis}
             disabled={isLoading}
-            className="p-1.5 text-slate-300 hover:text-white bg-[#223048] hover:bg-[#2b3c59] border border-slate-600/60 rounded-lg transition-colors disabled:opacity-40 shadow-sm"
+            className="p-1.5 text-secondary hover:text-on-surface bg-surface hover:bg-surface-container border border-surface-container-highest rounded-xl transition-colors disabled:opacity-40 shadow-sm"
             title="Re-run AI Sensor Scan"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-blue-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-primary' : ''}`} />
           </button>
         </div>
       </div>
@@ -297,28 +288,28 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
       {/* Main Analysis Body */}
       <div className="mt-3.5 space-y-3">
         {/* Natural Language Diagnostic Summary */}
-        <div className="text-xs sm:text-sm text-slate-200 leading-relaxed bg-[#141d2c]/90 rounded-xl p-3.5 border border-slate-700/60 flex items-start gap-2.5 shadow-inner">
-          <Sparkles className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+        <div className="text-xs sm:text-sm text-on-surface leading-relaxed bg-surface rounded-xl p-3.5 border border-surface-container-highest flex items-start gap-2.5 shadow-sm">
+          <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-slate-100">
+            <p className="text-on-surface font-medium">
               {anomalyData?.summary || 'Synthesizing sensor patterns and autoencoder statistical metrics...'}
             </p>
 
             {/* Quick Action & Cause Tags */}
-            <div className="mt-2.5 pt-2 border-t border-slate-700/50 flex flex-wrap items-center gap-2 text-xs">
+            <div className="mt-2.5 pt-2 border-t border-surface-container-highest flex flex-wrap items-center gap-2 text-xs">
               {anomalyData?.physicalRootCause && (
-                <div className="flex items-center gap-1.5 bg-[#1e2a3e] px-2.5 py-1 rounded-md border border-slate-600/50 text-slate-200 shadow-sm">
-                  <Layers className="w-3 h-3 text-indigo-400 shrink-0" />
-                  <span className="text-slate-400">Root Cause:</span>
-                  <span className="font-medium text-slate-100">{anomalyData.physicalRootCause}</span>
+                <div className="flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-md border border-surface-container-highest text-on-surface shadow-sm">
+                  <Layers className="w-3 h-3 text-primary shrink-0" />
+                  <span className="text-secondary">Root Cause:</span>
+                  <span className="font-semibold text-on-surface">{anomalyData.physicalRootCause}</span>
                 </div>
               )}
 
               {anomalyData?.recommendedAction && (
-                <div className="flex items-center gap-1.5 bg-[#1e2a3e] px-2.5 py-1 rounded-md border border-slate-600/50 text-slate-200 shadow-sm">
-                  <Wrench className="w-3 h-3 text-amber-400 shrink-0" />
-                  <span className="text-slate-400">Action:</span>
-                  <span className="font-medium text-amber-200">{anomalyData.recommendedAction}</span>
+                <div className="flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-md border border-surface-container-highest text-on-surface shadow-sm">
+                  <Wrench className="w-3 h-3 text-tertiary shrink-0" />
+                  <span className="text-secondary">Action:</span>
+                  <span className="font-semibold text-on-surface">{anomalyData.recommendedAction}</span>
                 </div>
               )}
             </div>
@@ -327,13 +318,13 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
 
         {/* Anomalous Channels List if detected */}
         {anomalyData && anomalyData.anomalousSensors && anomalyData.anomalousSensors.length > 0 && (
-          <div className="bg-[#151f30] rounded-xl p-3.5 border border-slate-700/60 shadow-inner">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-300 mb-2 flex items-center justify-between">
+          <div className="bg-surface rounded-xl p-3.5 border border-surface-container-highest shadow-sm">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-secondary mb-2 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                <AlertTriangle className="w-3.5 h-3.5 text-tertiary" />
                 Detected Channel Anomalies ({anomalyData.anomalousSensors.length})
               </span>
-              <span className="text-slate-400 font-normal">
+              <span className="text-secondary font-normal font-mono">
                 Deviations &gt; ±8% baseline limit
               </span>
             </div>
@@ -342,21 +333,21 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
               {anomalyData.anomalousSensors.map((s, idx) => (
                 <div
                   key={idx}
-                  className="bg-[#1e2a3e] border border-slate-600/50 rounded-lg px-2.5 py-1.5 flex items-center justify-between text-xs shadow-sm"
+                  className="bg-surface-container border border-surface-container-highest rounded-lg px-2.5 py-1.5 flex items-center justify-between text-xs shadow-sm"
                 >
                   <div className="truncate mr-2">
-                    <span className="font-medium text-white block truncate">{s.name}</span>
-                    <span className="text-[10px] text-slate-300">{s.reading}</span>
+                    <span className="font-medium text-on-surface block truncate">{s.name}</span>
+                    <span className="text-[10px] text-secondary">{s.reading}</span>
                   </div>
                   <div className="text-right shrink-0">
                     <span
                       className={`font-mono text-xs font-bold block ${
-                        s.concern.includes('Critical') ? 'text-rose-400' : 'text-amber-400'
+                        s.concern.includes('Critical') ? 'text-error' : 'text-tertiary'
                       }`}
                     >
                       {s.deviation}
                     </span>
-                    <span className="text-[9px] uppercase tracking-wider text-slate-400 font-medium">
+                    <span className="text-[9px] uppercase tracking-wider text-secondary font-medium">
                       {s.concern}
                     </span>
                   </div>
@@ -366,41 +357,41 @@ export const AiSensorAnomalyCard: React.FC<AiSensorAnomalyCardProps> = ({
           </div>
         )}
 
-        {/* Toggleable Technical Deep Dive Drawer */}
+        {/* Technical Deep Dive */}
         <div className="pt-1">
           <button
             onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}
-            className="text-[11px] text-slate-300 hover:text-white flex items-center gap-1 transition-colors font-medium"
+            className="text-[11px] text-secondary hover:text-on-surface flex items-center gap-1 transition-colors font-medium"
           >
-            <Info className="w-3.5 h-3.5 text-blue-400" />
-            <span>{isDetailsExpanded ? 'Hide Mathematical & AI Details' : 'View AI Autoencoder & Sensor Threshold Details'}</span>
+            <Info className="w-3.5 h-3.5 text-primary" />
+            <span>{isDetailsExpanded ? 'Hide Model & Baseline Calibration Details' : 'View Model & Baseline Calibration Details'}</span>
             {isDetailsExpanded ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
           </button>
 
           {isDetailsExpanded && (
-            <div className="mt-2 text-xs bg-[#131d2c]/90 p-3.5 rounded-xl border border-slate-700/60 text-slate-200 space-y-2 leading-relaxed shadow-inner">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center pb-2 border-b border-slate-700/50">
-                <div className="bg-[#1e2a3e] p-2.5 rounded-lg border border-slate-600/50 shadow-sm">
-                  <div className="text-[10px] text-slate-400">Reconstruction MSE</div>
-                  <div className="font-mono font-bold text-white text-sm">{activePoint.health_index_mse.toFixed(5)}</div>
+            <div className="mt-2 text-xs bg-surface p-3.5 rounded-xl border border-surface-container-highest text-on-surface space-y-2 leading-relaxed shadow-sm">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center pb-2 border-b border-surface-container-highest">
+                <div className="bg-surface-container p-2.5 rounded-lg border border-surface-container-highest shadow-sm">
+                  <div className="text-[10px] text-secondary">Reconstruction MSE</div>
+                  <div className="font-mono font-bold text-on-surface text-sm">{activePoint.health_index_mse.toFixed(5)}</div>
                 </div>
-                <div className="bg-[#1e2a3e] p-2.5 rounded-lg border border-slate-600/50 shadow-sm">
-                  <div className="text-[10px] text-slate-400">3σ Baseline Threshold</div>
-                  <div className="font-mono font-bold text-white text-sm">{asset.threshold3Sigma.toFixed(4)}</div>
+                <div className="bg-surface-container p-2.5 rounded-lg border border-surface-container-highest shadow-sm">
+                  <div className="text-[10px] text-secondary">3σ Baseline Threshold</div>
+                  <div className="font-mono font-bold text-on-surface text-sm">{asset.threshold3Sigma.toFixed(4)}</div>
                 </div>
-                <div className="bg-[#1e2a3e] p-2.5 rounded-lg border border-slate-600/50 shadow-sm">
-                  <div className="text-[10px] text-slate-400">Threshold Ratio</div>
-                  <div className={`font-mono font-bold text-sm ${mseRatio > 1.0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                <div className="bg-surface-container p-2.5 rounded-lg border border-surface-container-highest shadow-sm">
+                  <div className="text-[10px] text-secondary">Threshold Ratio</div>
+                  <div className={`font-mono font-bold text-sm ${mseRatio > 1.0 ? 'text-tertiary' : 'text-primary'}`}>
                     {mseRatio.toFixed(2)}x
                   </div>
                 </div>
-                <div className="bg-[#1e2a3e] p-2.5 rounded-lg border border-slate-600/50 shadow-sm">
-                  <div className="text-[10px] text-slate-400">Degradation Knee Point</div>
-                  <div className="font-mono font-bold text-white text-sm">Cycle {asset.kneePoint}</div>
+                <div className="bg-surface-container p-2.5 rounded-lg border border-surface-container-highest shadow-sm">
+                  <div className="text-[10px] text-secondary">Degradation Knee Point</div>
+                  <div className="font-mono font-bold text-on-surface text-sm">Cycle {asset.kneePoint}</div>
                 </div>
               </div>
-              <p className="text-slate-300 text-[11px] pt-1">
-                <strong className="text-white">How this AI model works:</strong> The deep PyTorch autoencoder is trained exclusively on healthy baseline telemetry (Cycles 1–{asset.kneePoint}). When component degradation sets in, cross-sensor correlations fracture, causing the reconstruction error (MSE) to diverge beyond the statistical 3-sigma envelope ({asset.threshold3Sigma}).
+              <p className="text-secondary text-[11px] pt-1">
+                <strong className="text-on-surface">Autoencoder Anomaly Pipeline:</strong> Deep PyTorch Autoencoder trained on healthy baseline runs. When mechanical wear starts after cycle {asset.kneePoint}, multi-channel cross-correlations fracture, breaching the statistical 3σ threshold ({asset.threshold3Sigma.toFixed(4)}).
               </p>
             </div>
           )}

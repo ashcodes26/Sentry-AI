@@ -1,38 +1,92 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-secondary: #6b6358;
+  --color-surface: #faf6f0;
+  --color-background: #f5f1ea;
+  --color-on-tertiary: #ffffff;
+  --color-on-background: #2e3230;
+  --color-surface-container-high: #eae6de;
+  --color-on-surface: #2e3230;
+  --color-on-primary-fixed-variant: #2a6038;
+  --color-outline: #74796e;
+  --color-on-error-container: #690005;
+  --color-inverse-on-surface: #f5f0e8;
+  --color-surface-dim: #dbd7cf;
+  --color-tertiary-fixed: #f8e0a8;
+  --color-surface-bright: #faf6f0;
+  --color-on-error: #ffffff;
+  --color-outline-variant: #c4c8bc;
+  --color-on-tertiary-fixed-variant: #554020;
+  --color-secondary-container: #f0e8db;
+  --color-on-tertiary-container: #554020;
+  --color-primary-fixed-dim: #8ecf9e;
+  --color-on-secondary: #ffffff;
+  --color-secondary-fixed-dim: #d4ccbf;
+  --color-error: #b83230;
+  --color-primary: #4a7c59;
+  --color-surface-container-low: #f5f1ea;
+  --color-tertiary-container: #c4a66a;
+  --color-surface-container: #f0ece4;
+  --color-secondary-fixed: #f0e8db;
+  --color-on-primary-container: #173b22;
+  --color-on-secondary-fixed: #1e1a13;
+  --color-tertiary-fixed-dim: #dcc48e;
+  --color-primary-fixed: #c8e8d0;
+  --color-error-container: #fceae9;
+  --color-on-primary: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-secondary-container: #5e5548;
+  --color-on-surface-variant: #5a5e5a;
+  --color-surface-tint: #4a7c59;
+  --color-on-primary-fixed: #002110;
+  --color-inverse-primary: #8ecf9e;
+  --color-on-tertiary-fixed: #221a05;
+  --color-surface-container-highest: #e4e0d8;
+  --color-surface-variant: #e4e0d8;
+  --color-on-secondary-fixed-variant: #4a4538;
+  --color-tertiary: #8a6627;
+  --color-inverse-surface: #2e3230;
+  --color-primary-container: #d7e8db;
+
+  --font-headline: "Literata", serif;
+  --font-display: "Literata", serif;
+  --font-body: "Nunito Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
 
 @layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
   body {
-    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #121927;
-    background-image: 
-      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(37, 99, 235, 0.16) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 40% at 100% 30%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 0% 70%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
-      linear-gradient(180deg, #182236 0%, #131b2a 40%, #0f1624 100%);
-    background-attachment: fixed;
-    color: #f8fafc;
-    overflow-x: hidden;
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   code, pre, .font-mono {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
   }
 }
 
-/* Custom scrollbars for aerospace telemetry panels */
+/* Custom scrollbars from Stitch Terra Theme */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0e17;
+  background: #faf6f0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 3px;
+  background: #d4ccbf;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #b8b0a2;
 }

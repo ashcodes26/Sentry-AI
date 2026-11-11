@@ -73,42 +73,42 @@ export const HealthIndexRulChart: React.FC<HealthIndexRulChartProps> = ({
   const kneeX = xScale(kneePoint);
 
   return (
-    <div className="bg-gradient-to-b from-[#1b2537]/90 to-[#151f30]/90 backdrop-blur-sm border border-slate-700/60 rounded-xl p-6 shadow-lg shadow-black/10">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+    <div className="bg-surface rounded-2xl p-6 border border-surface-container-highest shadow-sm space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
         <div>
-          <h2 className="text-sm font-semibold text-slate-100 tracking-tight">
+          <h2 className="font-headline font-semibold text-lg text-on-surface tracking-tight">
             Predictive Health Degradation Trajectory
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-secondary mt-0.5">
             Stage 1 Autoencoder anomaly reconstruction MSE & Stage 2 LSTM Remaining Useful Life
           </p>
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-slate-400 flex-wrap">
+        <div className="flex items-center gap-4 text-xs text-secondary flex-wrap font-mono">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-1 bg-blue-500 rounded-sm inline-block" />
+            <span className="w-3 h-1 bg-primary rounded-sm inline-block" />
             <span>Autoencoder MSE</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 border-b border-dashed border-amber-500 inline-block" />
+            <span className="w-3 h-0.5 border-b border-dashed border-error inline-block" />
             <span>3σ Threshold</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-1 bg-emerald-500 rounded-sm inline-block" />
+            <span className="w-3 h-1 bg-primary rounded-sm inline-block" />
             <span>LSTM Predicted RUL</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 border-b border-dotted border-slate-500 inline-block" />
-            <span>Actual Ground Truth</span>
+            <span className="w-3 h-0.5 border-b border-dotted border-outline inline-block" />
+            <span>Ground Truth</span>
           </div>
         </div>
       </div>
 
       {/* Top: Autoencoder MSE */}
-      <div className="relative">
-        <div className="text-[11px] font-medium text-slate-300 mb-1.5 flex justify-between">
+      <div className="relative bg-surface-container-low rounded-xl p-4 border border-surface-container-highest">
+        <div className="text-[11px] font-medium text-secondary mb-2 flex justify-between font-mono">
           <span>STAGE 1 · RECONSTRUCTION ERROR (ANOMALY INDEX)</span>
-          <span className="text-blue-400 font-mono">
+          <span className={hoveredPoint.health_index_mse > threshold3Sigma ? 'text-error font-bold' : 'text-primary font-bold'}>
             Reading: {hoveredPoint.health_index_mse.toFixed(4)} MSE{' '}
             {hoveredPoint.health_index_mse > threshold3Sigma ? '(Drift Detected)' : '(Normal)'}
           </span>
@@ -116,7 +116,7 @@ export const HealthIndexRulChart: React.FC<HealthIndexRulChartProps> = ({
 
         <svg
           viewBox={`0 0 ${width} ${height1}`}
-          className="w-full h-auto bg-gradient-to-b from-[#121a28] to-[#0e1624] border border-slate-700/60 rounded-lg overflow-hidden shadow-inner"
+          className="w-full h-auto bg-surface border border-surface-container-highest/80 rounded-lg overflow-hidden shadow-inner"
           onMouseMove={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const relX = e.clientX - rect.left;
@@ -134,7 +134,7 @@ export const HealthIndexRulChart: React.FC<HealthIndexRulChartProps> = ({
               y1={margin.top + plotH1 * (1 - frac)}
               x2={width - margin.right}
               y2={margin.top + plotH1 * (1 - frac)}
-              stroke="#1b2332"
+              stroke="#eae6de"
               strokeDasharray="2 2"
             />
           ))}
@@ -145,12 +145,12 @@ export const HealthIndexRulChart: React.FC<HealthIndexRulChartProps> = ({
             y1={margin.top}
             x2={kneeX}
             y2={margin.top + plotH1}
-            stroke="#f59e0b"
+            stroke="#8a6627"
             strokeDasharray="3 3"
-            strokeOpacity="0.5"
+            strokeOpacity="0.8"
           />
-          <text x={kneeX + 4} y={margin.top + 12} fill="#f59e0b" fontSize="10" fontFamily="sans-serif">
-            Degradation Onset
+          <text x={kneeX + 4} y={margin.top + 12} fill="#8a6627" fontSize="10" fontFamily="sans-serif" fontWeight="600">
+            Degradation Onset (Cycle {kneePoint})
           </text>
 
           {/* 3-Sigma Limit */}
@@ -159,42 +159,42 @@ export const HealthIndexRulChart: React.FC<HealthIndexRulChartProps> = ({
             y1={thresholdY}
             x2={width - margin.right}
             y2={thresholdY}
-            stroke="#f59e0b"
-            strokeWidth="1.2"
+            stroke="#b83230"
+            strokeWidth="1.5"
             strokeDasharray="4 3"
           />
-          <text x={width - margin.right - 90} y={thresholdY - 4} fill="#f59e0b" fontSize="9" fontFamily="sans-serif">
+          <text x={width - margin.right - 95} y={thresholdY - 4} fill="#b83230" fontSize="9" fontFamily="sans-serif" fontWeight="600">
             3σ Limit ({threshold3Sigma.toFixed(4)})
           </text>
 
           {/* MSE Trace */}
-          <path d={mseHistoryPath} fill="none" stroke="#3b82f6" strokeWidth="2" />
+          <path d={mseHistoryPath} fill="none" stroke="#4a7c59" strokeWidth="2.5" />
 
           {/* Active Cursor */}
-          <line x1={currentX} y1={margin.top} x2={currentX} y2={margin.top + plotH1} stroke="#f43f5e" strokeWidth="1.2" />
-          <circle cx={currentX} cy={yScaleTop(hoveredPoint.health_index_mse)} r="4" fill="#f43f5e" />
+          <line x1={currentX} y1={margin.top} x2={currentX} y2={margin.top + plotH1} stroke="#b83230" strokeWidth="1.2" strokeDasharray="3 3" />
+          <circle cx={currentX} cy={yScaleTop(hoveredPoint.health_index_mse)} r="4" fill="#b83230" stroke="#faf6f0" strokeWidth="2" />
 
-          <text x={margin.left - 8} y={margin.top + 10} fill="#64748b" fontSize="9" textAnchor="end" fontFamily="sans-serif">
+          <text x={margin.left - 8} y={margin.top + 10} fill="#74796e" fontSize="9" textAnchor="end" fontFamily="sans-serif">
             {maxMse.toFixed(2)}
           </text>
-          <text x={margin.left - 8} y={margin.top + plotH1} fill="#64748b" fontSize="9" textAnchor="end" fontFamily="sans-serif">
+          <text x={margin.left - 8} y={margin.top + plotH1} fill="#74796e" fontSize="9" textAnchor="end" fontFamily="sans-serif">
             0.00
           </text>
         </svg>
       </div>
 
       {/* Bottom: RUL Prediction */}
-      <div className="relative mt-5">
-        <div className="text-[11px] font-medium text-slate-400 mb-1.5 flex justify-between">
+      <div className="relative bg-surface-container-low rounded-xl p-4 border border-surface-container-highest">
+        <div className="text-[11px] font-medium text-secondary mb-2 flex justify-between font-mono">
           <span>STAGE 2 · REMAINING USEFUL LIFE (PIECEWISE LINEAR REGRESSION)</span>
-          <span className="text-emerald-400 font-mono">
+          <span className="text-primary font-bold">
             RUL: {hoveredPoint.RUL_pred} {timeUnit} (Actual: {hoveredPoint.RUL_actual})
           </span>
         </div>
 
         <svg
           viewBox={`0 0 ${width} ${height2}`}
-          className="w-full h-auto bg-gradient-to-b from-[#121a28] to-[#0e1624] border border-slate-700/60 rounded-lg overflow-hidden shadow-inner"
+          className="w-full h-auto bg-surface border border-surface-container-highest/80 rounded-lg overflow-hidden shadow-inner"
           onMouseMove={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const relX = e.clientX - rect.left;
@@ -204,48 +204,61 @@ export const HealthIndexRulChart: React.FC<HealthIndexRulChartProps> = ({
           }}
           onMouseLeave={() => setHoveredCycle(null)}
         >
+          {/* Subtle grid */}
+          {[0.25, 0.5, 0.75].map((frac) => (
+            <line
+              key={frac}
+              x1={margin.left}
+              y1={margin.top + plotH2 * (1 - frac)}
+              x2={width - margin.right}
+              y2={margin.top + plotH2 * (1 - frac)}
+              stroke="#eae6de"
+              strokeDasharray="2 2"
+            />
+          ))}
+
           {/* Service threshold line */}
           <line
             x1={margin.left}
             y1={yScaleBottom(35)}
             x2={width - margin.right}
             y2={yScaleBottom(35)}
-            stroke="#f59e0b"
-            strokeWidth="1"
-            strokeDasharray="2 2"
-            strokeOpacity="0.6"
+            stroke="#8a6627"
+            strokeWidth="1.2"
+            strokeDasharray="3 3"
           />
-          <text x={margin.left + 8} y={yScaleBottom(35) - 4} fill="#f59e0b" fontSize="9" fontFamily="sans-serif">
+          <text x={margin.left + 8} y={yScaleBottom(35) - 4} fill="#8a6627" fontSize="9" fontFamily="sans-serif" fontWeight="600">
             Maintenance Window (35 {timeUnit})
           </text>
 
           {/* Confidence interval */}
-          {ciPolygon && <polygon points={ciPolygon} fill="rgba(16, 185, 129, 0.1)" />}
+          {ciPolygon && <polygon points={ciPolygon} fill="#d7e8db" opacity="0.65" />}
 
           {/* Ground truth */}
-          <path d={rulActualPath} fill="none" stroke="#475569" strokeWidth="1.5" strokeDasharray="3 3" />
+          <line stroke="#a8a29e" strokeDasharray="4 4" strokeWidth="1.5" x1={margin.left} y1={yScaleBottom(125)} x2={width - margin.right} y2={yScaleBottom(0)} />
+          <path d={rulActualPath} fill="none" stroke="#74796e" strokeWidth="1.5" strokeDasharray="3 3" />
 
           {/* RUL prediction */}
-          <path d={rulPredPath} fill="none" stroke="#10b981" strokeWidth="2.2" />
+          <path d={rulPredPath} fill="none" stroke="#4a7c59" strokeWidth="2.5" strokeLinecap="round" />
 
           {/* Active cursor */}
-          <line x1={currentX} y1={margin.top} x2={currentX} y2={margin.top + plotH2} stroke="#f43f5e" strokeWidth="1.2" />
-          <circle cx={currentX} cy={yScaleBottom(hoveredPoint.RUL_pred)} r="4" fill="#10b981" />
+          <line x1={currentX} y1={margin.top} x2={currentX} y2={margin.top + plotH2} stroke="#b83230" strokeWidth="1.2" strokeDasharray="3 3" />
+          <circle cx={currentX} cy={yScaleBottom(hoveredPoint.RUL_pred)} r="5" fill="#4a7c59" stroke="#faf6f0" strokeWidth="2" />
 
-          <text x={margin.left - 8} y={yScaleBottom(125)} fill="#64748b" fontSize="9" textAnchor="end" fontFamily="sans-serif">
+          <text x={margin.left - 8} y={yScaleBottom(125)} fill="#74796e" fontSize="9" textAnchor="end" fontFamily="sans-serif">
             125 (Cap)
           </text>
-          <text x={margin.left - 8} y={yScaleBottom(0)} fill="#64748b" fontSize="9" textAnchor="end" fontFamily="sans-serif">
+          <text x={margin.left - 8} y={yScaleBottom(0)} fill="#74796e" fontSize="9" textAnchor="end" fontFamily="sans-serif">
             0
           </text>
 
-          <text x={margin.left} y={height2 - 5} fill="#64748b" fontSize="9" fontFamily="sans-serif">
+          <text x={margin.left} y={height2 - 5} fill="#74796e" fontSize="9" fontFamily="sans-serif">
             Start (0)
           </text>
-          <text x={width / 2} y={height2 - 5} fill="#64748b" fontSize="9" textAnchor="middle" fontFamily="sans-serif">
+          <text x={width / 2} y={height2 - 5} fill="#74796e" fontSize="9" textAnchor="middle" fontFamily="sans-serif">
             Operating Life ({timeUnit})
           </text>
-          <text x={width - margin.right} y={height2 - 5} fill="#64748b" fontSize="9" textAnchor="end" fontFamily="sans-serif">
+          <text x={width - margin.right} y={height2 - 5} fill="#74796e" fontSize="9" textAnchor="end" fontFamily="sans-serif">
             Total ({maxCycles})
           </text>
         </svg>

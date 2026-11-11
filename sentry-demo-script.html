@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SENTRY IQ — 2-Minute High-Impact Live Demo Script & Action Flow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap');
+
+    @page {
+      size: A4 portrait;
+      margin: 12mm 12mm 12mm 12mm;
+      @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 7.5pt;
+        color: #718096;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #1a202c;
+      background: #ffffff;
+      line-height: 1.45;
+      font-size: 9pt;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header-banner {
+      border-bottom: 2px solid #2b6cb0;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .brand-title {
+      font-size: 18pt;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #1a365d;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: #2b6cb0;
+      margin-top: 3px;
+    }
+
+    .meta-box {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5pt;
+      color: #718096;
+      line-height: 1.35;
+    }
+
+    .meta-box strong {
+      color: #2b6cb0;
+    }
+
+    .speed-badge {
+      display: inline-block;
+      background: #ebf8ff;
+      border: 1px solid #bee3f8;
+      color: #2b6cb0;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 7.5pt;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    /* Checklist & Setup Callout */
+    .callout-box {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #3182ce;
+      border-radius: 5px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+
+    .callout-title {
+      font-size: 8.5pt;
+      font-weight: 700;
+      color: #2b6cb0;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      font-size: 8pt;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+    }
+
+    .checklist-item span.icon {
+      color: #38a169;
+      font-weight: bold;
+    }
+
+    /* Master Table */
+    .section-heading {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #2d3748;
+      margin: 10px 0 6px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 3px;
+    }
+
+    table.timing-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      font-size: 8pt;
+    }
+
+    table.timing-matrix th {
+      background: #edf2f7;
+      text-align: left;
+      padding: 5px 8px;
+      font-weight: 700;
+      color: #2d3748;
+      border: 1px solid #cbd5e0;
+    }
+
+    table.timing-matrix td {
+      padding: 5px 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    table.timing-matrix tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    /* Acts Layout */
+    .act-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background: #ffffff;
+      page-break-inside: avoid;
+      overflow: hidden;
+    }
+
+    .act-header {
+      background: #edf2f7;
+      padding: 5px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .act-name {
+      font-weight: 700;
+      font-size: 9pt;
+      color: #1a365d;
+    }
+
+    .act-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5pt;
+      font-weight: 700;
+      background: #2b6cb0;
+      color: #ffffff;
+      padding: 2px 7px;
+      border-radius: 9999px;
+    }
+
+    .act-body {
+      padding: 8px 10px;
+    }
+
+    .action-row {
+      background: #f0fff4;
+      border: 1px solid #c6f6d5;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin-bottom: 6px;
+      font-size: 8pt;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #22543d;
+    }
+
+    .action-tag {
+      font-weight: 700;
+      color: #276749;
+      text-transform: uppercase;
+      font-size: 7pt;
+      background: #c6f6d5;
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .speech-box {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 9.5pt;
+      line-height: 1.5;
+      color: #2d3748;
+      background: #fcfcfc;
+      border-left: 3px solid #3182ce;
+      padding: 6px 10px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .speech-box em {
+      color: #2b6cb0;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .speech-box strong {
+      color: #1a202c;
+      font-weight: 700;
+    }
+
+    .speech-lead {
+      font-family: 'Inter', sans-serif;
+      font-size: 7pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #718096;
+      margin-bottom: 2px;
+    }
+
+    /* Technical Defense & FAQ */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 6px;
+      page-break-inside: avoid;
+    }
+
+    .faq-item {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 8pt;
+    }
+
+    .faq-question {
+      font-weight: 700;
+      color: #2b6cb0;
+      margin-bottom: 2px;
+    }
+
+    .faq-answer {
+      color: #4a5568;
+      line-height: 1.35;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header-banner">
+    <div>
+      <div class="brand-title">SENTRY IQ · 2-MINUTE PITCH DEMO</div>
+      <div class="brand-subtitle">High-Velocity Live Walkthrough Flow & Word-for-Word Script</div>
+      <div class="speed-badge">⚡ TARGET TIME: EXACTLY 2:00 (120 SECONDS) · ~260 WORDS</div>
+    </div>
+    <div class="meta-box">
+      <div>PRIMARY ASSET: <strong>Substation Transformer TX-400</strong></div>
+      <div>APP HOST: <strong>http://localhost:3000</strong></div>
+      <div>PACING: <strong>130 WPM (Clear, Confident, Crisp)</strong></div>
+    </div>
+  </div>
+
+  <!-- PRE-FLIGHT CHECKLIST -->
+  <div class="callout-box">
+    <div class="callout-title">
+      <span>⚡</span> 30-Second Pre-Flight Check (Before Hitting Play)
+    </div>
+    <div class="checklist-grid">
+      <div class="checklist-item">
+        <span class="icon">✓</span>
+        <div><strong>Display:</strong> Chrome full-screen (F11), 100% zoom</div>
+      </div>
+      <div class="checklist-item">
+        <span class="icon">✓</span>
+        <div><strong>Preset State:</strong> TX-400 selected, simulation at Day 0 (Reset)</div>
+      </div>
+      <div class="checklist-item">
+        <span class="icon">✓</span>
+        <div><strong>Copilot Drawer:</strong> Kept closed until Act 4 trigger</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MASTER 120-SECOND TIMELINE -->
+  <div class="section-heading">Master 120-Second Flow Architecture</div>
+  <table class="timing-matrix">
+    <thead>
+      <tr>
+        <th style="width: 14%;">Act</th>
+        <th style="width: 22%;">Screen / Click Target</th>
+        <th style="width: 50%;">Core Narrative & Impact Point</th>
+        <th style="width: 14%;">Window</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Act 1: The Crisis</strong></td>
+        <td>Vitality Header & Status Pill</td>
+        <td>$450k transformer failure vs. early dissolved gas signals</td>
+        <td>0:00 – 0:20 (20s)</td>
+      </tr>
+      <tr>
+        <td><strong>Act 2: Digital Twin</strong></td>
+        <td>100Hz Waveform Telemetry</td>
+        <td>Real-time DGA telemetry (H₂, Dielectric, Temp) & nominal baselines</td>
+        <td>0:20 – 0:45 (25s)</td>
+      </tr>
+      <tr>
+        <td><strong>Act 3: Anomaly Knee</strong></td>
+        <td>Simulation Scrub (+5 to Day 38)</td>
+        <td>Unsupervised 3σ Autoencoder breach; +280% H₂ surge; 18-day RUL</td>
+        <td>0:45 – 1:15 (30s)</td>
+      </tr>
+      <tr>
+        <td><strong>Act 4: AI Copilot</strong></td>
+        <td>Copilot Drawer ("Action" Chip)</td>
+        <td>Instant physics diagnosis: cellulose insulation pyrolysis</td>
+        <td>1:15 – 1:40 (25s)</td>
+      </tr>
+      <tr>
+        <td><strong>Act 5: Closed-Loop ROI</strong></td>
+        <td>Work Orders & Financial Bento</td>
+        <td>Work Order #WO-XFMR-3902; $428k saved (+95.1% net ROI); Wrap</td>
+        <td>1:40 – 2:00 (20s)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ACT 1 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-name">ACT 1: The $450k Blindspot (The Hook)</div>
+      <div class="act-time">0:00 – 0:20 (20s)</div>
+    </div>
+    <div class="act-body">
+      <div class="action-row">
+        <span class="action-tag">UI Action</span>
+        <span>Mouse hovers over top KPI banner (Vitality 96%, Telemetry Active). Stand firm, do not click yet.</span>
+      </div>
+      <div class="speech-box">
+        <div class="speech-lead">Word-for-Word Script (42 words · ~19 sec):</div>
+        "A single 230kV power transformer explosion costs <strong>$450,000</strong> and plunges 45,000 homes into an unscheduled blackout.<br><br>
+        Yet transformers don't fail suddenly—they whisper warnings weeks in advance. This is <strong>SENTRY</strong>: an autonomous asset intelligence platform that bridges real-time physics telemetry to closed-loop field operations."
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT 2 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-name">ACT 2: Live 100Hz Telemetry & Digital Twin</div>
+      <div class="act-time">0:20 – 0:45 (25s)</div>
+    </div>
+    <div class="act-body">
+      <div class="action-row">
+        <span class="action-tag">UI Action</span>
+        <span>Click Fleet Selector briefly to show multi-asset support (Turbofan, Pump, Grid), then keep <strong>Substation Transformer TX-400</strong> active. Gesture to the live SVG waveform channels.</span>
+      </div>
+      <div class="speech-box">
+        <div class="speech-lead">Word-for-Word Script (53 words · ~24 sec):</div>
+        "Here at Substation Alpha, SENTRY is streaming <strong>continuous 100Hz telemetry</strong>: Top-Oil Temperature, Dissolved H₂ Gas, and Dielectric Breakdown Strength.<br><br>
+        Every stream is evaluated against IEEE C57 statistical envelopes. Right now, our Vitality score is <strong>96%</strong>, and the Autoencoder reconstruction error is resting near zero in nominal health."
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ACT 3 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-name">ACT 3: Stepping into the Anomaly Knee Breach</div>
+      <div class="act-time">0:45 – 1:15 (30s)</div>
+    </div>
+    <div class="act-body">
+      <div class="action-row">
+        <span class="action-tag">UI Action</span>
+        <span>Click <strong>'Step +5'</strong> rapidly 5 times to hit <strong>Day 38</strong>. Stop immediately as the red <em>'AI Critical Alert: ANOMALY BREACH'</em> banner fires.</span>
+      </div>
+      <div class="speech-box">
+        <div class="speech-lead">Word-for-Word Script (68 words · ~29 sec):</div>
+        "Let's simulate operational stress across the next 40 days.<br><br>
+        Watch Day 38... <em>(clicks +5, alert fires)</em>. Immediately, the unsupervised Autoencoder breaches the <strong>3-sigma threshold</strong>—no manual alarm configuration needed.<br><br>
+        Dissolved H₂ has surged <strong>+280%</strong> from 14 to nearly 400 ppm, while dielectric breakdown strength has collapsed. SENTRY dynamically revises Remaining Useful Life down to just <strong>18 operating days</strong> before catastrophic flashover."
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT 4 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-name">ACT 4: Reliability Copilot Root-Cause Diagnosis</div>
+      <div class="act-time">1:15 – 1:40 (25s)</div>
+    </div>
+    <div class="act-body">
+      <div class="action-row">
+        <span class="action-tag">UI Action</span>
+        <span>Click the top-right <strong>'Copilot'</strong> button. When the drawer slides out, immediately click the chip <strong>'Recommended Action'</strong>.</span>
+      </div>
+      <div class="speech-box">
+        <div class="speech-lead">Word-for-Word Script (58 words · ~24 sec):</div>
+        "Rather than drowning operators in raw alerts, we invoke the <strong>Industrial Reliability Copilot</strong>.<br><br>
+        <em>(Click 'Recommended Action')</em><br><br>
+        The Copilot instantly reasons across the telemetry vectors: diagnosing <strong>internal cellulose insulation pyrolysis</strong> and prescribing mobile vacuum dehydration and molecular sieve recharge—saving the core before irreparable tank rupture occurs."
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT 5 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-name">ACT 5: Closed-Loop Dispatch & $428k CFO Proof</div>
+      <div class="act-time">1:40 – 2:00 (20s)</div>
+    </div>
+    <div class="act-body">
+      <div class="action-row">
+        <span class="action-tag">UI Action</span>
+        <span>Point cursor to the <strong>Orders & Financial Impact</strong> bento card. Highlight the <strong>$428,000 Capital Preserved</strong> badge. Look directly at audience for closing line.</span>
+      </div>
+      <div class="speech-box">
+        <div class="speech-lead">Word-for-Word Script (52 words · ~20 sec):</div>
+        "Finally, SENTRY closes the operational loop: automatically generating <strong>Work Order #WO-XFMR-3902</strong> with the exact tooling kit for Field Crew Beta.<br><br>
+        The financial result? A $22,000 scheduled repair versus a $450,000 emergency replacement: <strong>$428,000 in net capital preserved—a 95.1% ROI</strong> on a single asset.<br><br>
+        That's SENTRY. Thank you!"
+      </div>
+    </div>
+  </div>
+
+  <!-- RAPID-FIRE FAQ CHEATSHEET -->
+  <div class="section-heading">Rapid-Fire Q&A Pocket Defense (10-Second Answers)</div>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-question">Q: What if the PyTorch ML service goes down during operations?</div>
+      <div class="faq-answer"><strong>A:</strong> Dual-engine architecture: the client immediately and seamlessly fails over to an in-memory calibrated physics simulation in TypeScript with zero dropped telemetry or UI lag.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Q: How does this connect to our existing enterprise work order software?</div>
+      <div class="faq-answer"><strong>A:</strong> The closed-loop dispatch engine generates standardized REST JSON payloads pre-formatted for direct ingestion into SAP Plant Maintenance (PM), IBM Maximo, or ServiceNow.</div>
+    </div>
+  </div>
+
+</body>
+</html>

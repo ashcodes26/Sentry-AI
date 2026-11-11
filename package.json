@@ -5,11 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
+    "dev:web": "tsx server.ts",
+    "dev:ml": "node run_ml.cjs",
+    "dev:all": "npx --yes concurrently -k -n \"GATEWAY,ML-ENGINE\" -c \"cyan,magenta\" \"tsx server.ts\" \"node run_ml.cjs\"",
     "build": "vite build",
     "start": "tsx server.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test:ml": "py -3.12 test_ml_service.py"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

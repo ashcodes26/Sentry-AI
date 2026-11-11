@@ -75,3 +75,19 @@ export interface FinancialImpact {
   netSavings: number;
   roiPercent: number;
 }
+
+export interface WorkOrder {
+  id: string;
+  assetId: string;
+  assetName: string;
+  cycle: number;
+  priority: 'CRITICAL' | 'HIGH' | 'MEDIUM';
+  title: string;
+  status: 'DISPATCHED' | 'IN_PROGRESS' | 'RESOLVED';
+  technician: string;
+  actionRequired: string;
+  partsReplaced?: string;
+  createdAt: number;
+  resolvedAt?: number;
+}
+

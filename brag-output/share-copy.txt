@@ -1,0 +1,1 @@
+A single 230kV substation transformer blowout costs $450,000 and plunges entire grids into blackout. We built SENTRY: a deep learning industrial digital twin that pairs PyTorch Autoencoders and sequence GRUs with Gemini 2.5 Flash to detect micro-arcing weeks in advance, preserving $428,000 in capital.
