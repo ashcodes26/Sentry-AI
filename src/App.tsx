@@ -3,7 +3,7 @@
  * Redesigned with Google Stitch Design System & Complete Maintenance Operations
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { CleanTopNav } from './components/CleanTopNav';
 import { CleanAssetHero } from './components/CleanAssetHero';
 import { CleanTimeline } from './components/CleanTimeline';
@@ -73,6 +73,27 @@ export default function App() {
     mlEngine?: { online: boolean; target?: string };
     copilotAi?: { configured: boolean; model?: string };
   } | null>(null);
+
+  const tabContentRef = useRef<HTMLDivElement>(null);
+  const isInitialMount = useRef(true);
+
+  const handleSelectTab = (tab: 'overview' | 'models' | 'roi' | 'maintenance') => {
+    setActiveTab(tab);
+    window.requestAnimationFrame(() => {
+      tabContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      tabContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [activeTab]);
 
   useEffect(() => {
     const checkStatus = () => {
@@ -222,7 +243,7 @@ export default function App() {
         onSelectAsset={handleSelectAsset}
         onOpenAddModal={() => setIsAddModalOpen(true)}
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={handleSelectTab}
         isCopilotOpen={isCopilotOpen}
         onToggleCopilot={() => setIsCopilotOpen((prev) => !prev)}
         workOrderCount={workOrders.filter((w) => w.status !== 'RESOLVED').length}
@@ -252,7 +273,11 @@ export default function App() {
         />
 
         {/* Content Tabs & Optional Copilot Sidecar */}
-        <div className={`grid grid-cols-1 ${isCopilotOpen ? 'lg:grid-cols-12 gap-6' : ''}`}>
+        <div
+          ref={tabContentRef}
+          id="tab-content"
+          className={`scroll-mt-20 grid grid-cols-1 ${isCopilotOpen ? 'lg:grid-cols-12 gap-6' : ''}`}
+        >
           {/* Main Content Pane */}
           <div className={isCopilotOpen ? 'lg:col-span-8' : 'w-full'}>
             {activeTab === 'overview' && (
